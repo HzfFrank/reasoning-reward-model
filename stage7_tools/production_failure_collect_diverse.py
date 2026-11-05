@@ -27,7 +27,7 @@ from rlinf.envs.libero.libero_env import LiberoEnv
 from rlinf.envs.wrappers.collect_episode import CollectEpisode
 from rlinf.models.embodiment.openpi import get_model
 
-RLINF = Path('/project_c20250301/251503016/RLinf')
+RLINF = Path(os.environ['V7_COLLECTION_REPO']).expanduser().resolve()
 
 
 def _json(path: Path, value) -> None:

@@ -538,5 +538,19 @@
       "stage7_tools/v7_spatial_def_teacher.py",
       "stage7_tools/v7_grounded_contract_templates.py"
     ]
-  ]
+  ],
+  "publication_pruning": {
+    "date": "2026-11-05",
+    "removed_from_current_tree": [
+      "stage7_sft/test_grounded_contract.py",
+      "stage7_sft/test_protocol.py",
+      "stage7_sft/control.py",
+      "stage7_sft/test_control.py",
+      "stage7_sft/prepare_success_failure_mix.py",
+      "stage7_sft/test_gradient_accumulation.py",
+      "stage7_tools/retry_event_aligned_two_cot.py",
+      "stage7_tools/perturbed_rollout_pilot.py"
+    ],
+    "reason": "Unused historical tests and one-off collection/mixing/retry utilities; archived outside publication repository. Original snapshot entries remain provenance only."
+  }
 }

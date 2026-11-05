@@ -5,6 +5,7 @@ import csv
 import hashlib
 import json
 import pickle
+import os
 import sys
 from pathlib import Path
 
@@ -14,7 +15,9 @@ ROOT = Path('/project_c20250301/251503016/reasoning')
 PILOT = ROOT / 'stage7_artifacts/v7_perturbed_rollout_pilot_20261023_r1'
 KEYS = ROOT / 'stage7_artifacts/v7_failure_keyframe_progress_20261023_r1/selection/keyframes.json'
 REFS = ROOT / 'stage7_artifacts/v7_failure_keyframe_progress_20261023_r1/calibration/references.json'
-RLINF = Path('/project_c20250301/251503016/RLinf')
+RLINF = Path(os.environ['V7_COLLECTION_REPO']).expanduser().resolve()
+if not (RLINF / 'toolkits/libero_sole/compute_contact_progress.py').is_file():
+    raise FileNotFoundError('V7_COLLECTION_REPO must point to the RLinf collection checkout')
 sys.path.insert(0, str(RLINF))
 from toolkits.libero_sole.compute_contact_progress import _select_robot_points, _select_object_points
 

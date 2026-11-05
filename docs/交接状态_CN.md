@@ -1,15 +1,27 @@
 # 交接状态：2026-11-05
 
-本地源码整理版；尚未声称 GitHub 发布或异机全流程验收完成。
+本地源码整理版，尚未推送 GitHub。正式 teacher/student 模板保持原文；实验输出、模型、临时验收驱动和旧测试不纳入源码。
 
-完成：独立 v7 仓库结构；必要源码依赖闭包；正式 teacher/student 模板原文保留；数据盘配置；成功/混合八卡训练入口；固定曝光计划重建；完整轨迹推理入口；失败 CoT 通用预检/生成入口；RL 独立分支可配置部署路径；旧采集修改归档分支。
+## 已完成的真实小规模验证
 
-实测：从发布版成功和失败数据重建14,704条曝光计划；混训预检通过，919步、460/919保存点不变。RL reward CPU回归11项通过（需要原 compat_deps）；真实 Hydra 配置路径解析通过，global batch2048、rollout epoch8、max epochs1000不变。一条冻结失败候选的通用入口预检通过，API调用为0。
+以下均运行发布目录中的代码，使用本机已有环境，未覆盖原实验目录。
 
-环境仍须注意：observed清单不是跨平台安装锁。LIBERO源码revision已记录；OpenPI及GPU/CUDA安装仍需按RLinf实际依赖完成异机验证。没有复制旧venv，也没有新建或升级本机环境。
+| 阶段 | 实际验证 |
+| --- | --- |
+| 几何标注 | 使用 RLinf 采集分支恢复一条真实轨迹的240帧仿真状态，按冻结task标尺复算；所选窗口两个端点与冻结整数标签一致，无恢复异常 |
+| CoT构造 | 固定 gpt-6.1-sol 模板真实调用1次，成功导出1条sequential训练JSONL；真实loader/processor验证22图及completion-only监督 |
+| 全参数SFT | 2张A100，已有正式成功from_zero和失败sequential各1条，从已有完整版模型继续1次更新；8,767,123,696参数可训练，loss=0.028077；视觉与语言权重实际改变 |
+| 保存与推理 | 保存checkpoint、optimizer、scheduler、step和processor；导出8个权重分片；RL reward worker实际重载本轮新模型并生成合法输出 |
+| RL接入 | 发布RLinf代码从SFT Pi0真实采集task6的17动作/18观测time-limit轨迹；sequential stride20查询0和17，线性插值回填17个奖励；4个microbatch、1次原生PPO更新，动作输出层32,768个权重值改变 |
 
-数据构造的剩余边界：几何标注/切窗的历史调度依赖原始轨迹、状态与实验manifest；本仓库保留实现及选窗/标尺摘要，但没有把这些原始资产作为源码提交，也未宣称新机器可以一键重建原始失败轨迹。CoT通用入口要求已准备并映射路径的候选及其semantic_states。
+SFT小测使用两条已有正式训练样本；本轮新API样本另行通过真实loader/processor检查，未声称它参与了上述参数更新。RL使用的是上述小测新导出的reward模型，不是跳过SFT环节直接使用旧模型。reward保持冻结，公式及输入输出协议未变。
 
-没有运行GPU训练、rollout或付费API。现有实验代码、数据、模型、上传任务均未被替换。本地所有检查产物放在仓库外的checks目录。
+**验证边界：**SFT实测两卡FSDP；RL实测为仓库外最小驱动调用发布版真实环境、reward进程、GAE和PPO方法，未在本轮重新运行原生Ray/FSDP八卡campaign。没有评估学习收益，也没有重建一套全新机器环境。不能将该结果当作八卡平台或异机安装验收。
 
-补充实测：成功sequential、成功from_zero、失败sequential三个正式样本通过真实Qwen processor，图像数22/20/22、prompt labels全部-100、student输入逐项一致；成功版/完整版模型的prompt文件哈希与协议校验均通过。没有加载GPU权重。
+本机证据保存在发布仓库之外的 `checks/real_pipeline_20261105`；历史检查另包括14,704条曝光计划重建、正式八卡训练预检和RL配置解析。源码精简前后的归档保存在仓库外 `local_archive`，不需要协作者下载历史测试或中间模型。
+
+## 仍需交接的资产边界
+
+已发布训练图像和JSONL可直接用于SFT。重新采集及几何标注还需要原始rollout、仿真状态、接触记录、BDDL/assets、任务标尺和选窗manifest；训练图像包不等于原始轨迹包。历史选窗调度仍依赖实验manifest，不能声称新机器可一键重建116条原始失败样本。
+
+采集与几何复算须明确设置 `V7_COLLECTION_REPO`，指向独立RLinf采集分支，避免隐式导入本机旧目录。RL训练使用独立训练分支。reward/policy/collection环境与安装边界见环境文档；observed版本清单不是跨平台安装锁。

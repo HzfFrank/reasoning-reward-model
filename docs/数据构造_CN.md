@@ -13,7 +13,7 @@
 "$V7_REWARD_PYTHON" stage7_tools/v7_bulk_grounded.py --output-dir "$V7_RUNS_ROOT/success_cot_01" --run --workers 4
 ```
 
-四条已认可样例作为本地模板回归夹具，不参与训练扩增。原生成器保留源行数、split、协议和断点校验。模型固定 gpt-6.1-sol，API 由 `V7_API_BASE_URL`、`V7_API_KEY_FILE` 配置，SDK 不自动重试；本轮整理未调用 API。
+四条已认可样例作为本地模板回归夹具，不参与训练扩增。原生成器保留源行数、split、协议和断点校验。模型固定 gpt-6.1-sol，API 由 `V7_API_BASE_URL`、`V7_API_KEY_FILE` 配置，SDK 不自动重试；调用记录与用量保存在输出目录，不纳入发布源码。
 
 ## 失败 CoT
 
@@ -37,3 +37,5 @@
 这些阶段的历史调度仍读取固定实验 manifest。源码和依赖已经保留，但原始轨迹、按任务校准清单和选窗输入尚未整理成公开独立资产包，不能声称新机器已能一键重新采集并重建116条失败数据。已完成的训练数据可独立用于 SFT。这部分待交接配置继续完善；不要重新校准公式来掩盖缺少历史输入。
 
 旧采集器及 collector 改动在独立 RLinf 采集分支，暂不合入当前 RL 训练分支。日后合并时以新 RL 环境为目标，保留观测/动作对应与完整状态记录。
+
+采集与几何复算前，设置 `V7_COLLECTION_REPO` 为 RLinf 采集分支的克隆目录，并将其加入 `PYTHONPATH`；使用该分支的 policy/仿真环境。该变量不能指向 RL 训练分支。原始轨迹中的 BDDL/图像路径也需映射到本机。
