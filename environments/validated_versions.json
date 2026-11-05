@@ -30,5 +30,15 @@
     "requirements": "policy-compat.txt"
   },
   "legacy_collection_rebuilt": false,
-  "eight_gpu_new_environment_tested": false
+  "eight_gpu_new_environment_tested": false,
+  "legacy_collection_on_policy_environment": {
+    "tested": true,
+    "task6_baseline_actions": 127,
+    "task6_drop_actions": 186,
+    "paired_full_state_max_error": 0.0,
+    "new_geometry_frames": 313,
+    "historical_task7_frames": 240,
+    "historical_distance_and_progress_max_difference": 0.0,
+    "all_tasks_tested": false
+  }
 }

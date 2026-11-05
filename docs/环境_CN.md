@@ -1,6 +1,6 @@
 # 环境安装与使用
 
-日常使用只需要两个环境：reward（CoT构造、Qwen SFT和推理）与policy（RLinf、Pi0和LIBERO）。只有重建旧扰动采集/几何标注，才需要独立的legacy collection环境。不要将旧、新RLinf同时editable安装进一个环境。
+日常使用只需要两个环境：reward（CoT构造、Qwen SFT和推理）与policy（RLinf、Pi0和LIBERO）。旧扰动采集/几何标注已用同一个policy环境完成小规模真实验证，无需默认安装第三套环境。旧、新RLinf代码仍为两个分支，运行时分别选择源码；不要同时editable安装两份RLinf。
 
 以下入口面向Linux x86_64/NVIDIA。先安装uv，并准备兼容的NVIDIA驱动。目录可使用系统盘、用户目录或共享数据盘；本项目不强制存储位置。需要自定义缓存时，先编辑并source `configs/paths.example.sh`，再source `scripts/data_disk_env.sh`。
 
@@ -48,6 +48,17 @@ Pi0权重及norm_stats、Qwen权重及processor、paligemma tokenizer是单独�
 
 ## 旧采集环境与验证边界
 
-legacy collection只服务旧采集分支，版本记录保存在`legacy_rollout.observed.txt`及源码revision清单中；本轮未声称其独立安装已验收。优先使用已发布数据，不必为了SFT/RL安装它。
+旧采集分支可复用上述policy Python。安装仍以RLinf训练分支为入口；运行采集/几何标注时，在独立进程中显式选择采集源码：
+
+```bash
+export V7_COLLECTION_REPO=/your/src/RLinf-collection
+export PYTHONPATH="$V7_COLLECTION_REPO:$V7_REWARD_REPO/stage7_tools"
+# 使用 $V7_POLICY_PYTHON 运行采集或几何标注入口。
+# 启动RL训练前退出此shell，或unset PYTHONPATH，由训练入口选择训练源码。
+```
+
+不要在同一Python进程中切换两份RLinf；模块缓存不会随PYTHONPATH自动替换。两分支使用同一环境的LIBERO_CONFIG_PATH即可。
+
+实测：task6成功基线127动作、配对掉落186动作；前缀完整状态误差0，313帧几何标注无恢复异常；另复算历史task7的240帧，与旧环境两距离/progress完全一致。未验证所有任务与扰动，也不保证新旧环境重新rollout逐帧相同。旧环境版本清单保留为历史复现参考，不再作为协作者必装项。采集脚本的历史输出目录限制和原始资产交接仍须单独处理，不能把环境兼容当作一键重建全部数据。
 
 实际安装/运行验证状态见[交接状态](交接状态_CN.md)。本机Ubuntu 22.04已有系统图形库和驱动，独立新建Python环境不等于重装操作系统；两卡测试也不等于八卡平台验收。

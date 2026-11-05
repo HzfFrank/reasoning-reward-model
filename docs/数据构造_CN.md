@@ -38,4 +38,4 @@
 
 旧采集器及 collector 改动在独立 RLinf 采集分支，暂不合入当前 RL 训练分支。日后合并时以新 RL 环境为目标，保留观测/动作对应与完整状态记录。
 
-采集与几何复算前，设置 `V7_COLLECTION_REPO` 为 RLinf 采集分支的克隆目录，并将其加入 `PYTHONPATH`；使用该分支的 policy/仿真环境。该变量不能指向 RL 训练分支。原始轨迹中的 BDDL/图像路径也需映射到本机。
+采集与几何复算前，设置 `V7_COLLECTION_REPO` 为 RLinf 采集分支的克隆目录，并将其加入 `PYTHONPATH`；可复用安装脚本创建的新policy环境（已验证一组task6配对采集及task7历史几何复算），无需额外安装旧venv。该变量不能指向 RL 训练分支。原始轨迹中的 BDDL/图像路径也需映射到本机。
