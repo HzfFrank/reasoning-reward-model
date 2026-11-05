@@ -7,7 +7,7 @@
 ## 先读哪些文件
 
 - [使用说明](docs/使用说明_CN.md)：下载数据后的 SFT、推理与 RL 连接。
-- [环境说明](docs/环境_CN.md)：reward、policy、collection 三套环境及已知安装边界。
+- [环境说明](docs/环境_CN.md)：reward、policy 两套环境，以及旧采集分支共用 policy 的方法。
 - [协作规则](CONTRIBUTING.md)：分支、兼容版本、实验记录。
 - [数据构造](docs/数据构造_CN.md)：模板、原始 rollout、几何分数和 API 入口。
 - [交接状态](docs/交接状态_CN.md)：已验证项与仍需完成的可移植工作。
@@ -28,3 +28,11 @@ sequential 输入 GLOBAL 16 图、INITIAL 2 图、PREVIOUS 2 图、CURRENT 2 图
 上述是发布目标名称，使用前核对上传是否完整；本代码整理不代表后台权重上传已经完成。
 
 RL 使用另一个保留上游历史的 RLinf 仓库。reward 为 `clip(progress,0,100)/100 - 1`；完整轨迹 sequential stride 20、线性插值、每副本 batch 4。协议失败按 RL 接口规则排除整条 episode；不要用伪造分数填补。
+
+## 配套代码仓库
+
+- 本仓库：[HzfFrank/reasoning-reward-model](https://github.com/HzfFrank/reasoning-reward-model)。克隆目录可自定，统一用 `V7_REWARD_REPO` 指向它。
+- RL训练：[HzfFrank/RLinf 的 handoff/v7-rl-training 分支](https://github.com/HzfFrank/RLinf/tree/handoff/v7-rl-training)。
+- 旧数据采集：[同仓库的 handoff/v7-data-collection 分支](https://github.com/HzfFrank/RLinf/tree/handoff/v7-data-collection)。仅需重建原始轨迹时克隆到另一目录。
+
+安装 policy 环境使用 RL 训练分支作为安装入口；采集分支可复用该环境，不必再装第三套。
