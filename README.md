@@ -1,10 +1,8 @@
 # V7 progress reward model
 
-这是 v7 正式流程的源码交接仓库：成功/失败数据构造、固定 CoT 模板、全参数 SFT、完整轨迹推理，以及与独立 RLinf 仓库的接入说明。模型、训练图像和 JSONL 放在 Hugging Face；实验输出不纳入 Git。
+这是 v7 正式流程的源码交接仓库。包含成功/失败数据构造、固定 CoT 模板、全参数 SFT、完整轨迹推理，以及与独立 RLinf 仓库的接入说明。模型、训练图像和 JSONL 放在 Hugging Face。
 
-本仓库从成熟实验代码按依赖整理，保留 `stage7_sft` 和 `stage7_tools` 名称，避免模块重命名破坏现有协议。少量名称带 review/pilot/v1 的文件是正式入口仍引用的公共实现，不代表需要重新执行历史试验。
-
-## 先读哪些文件
+## 说明
 
 - [使用说明](docs/使用说明_CN.md)：下载数据后的 SFT、推理与 RL 连接。
 - [环境说明](docs/环境_CN.md)：reward、policy 两套环境，以及旧采集分支共用 policy 的方法。
@@ -24,10 +22,6 @@ sequential 输入 GLOBAL 16 图、INITIAL 2 图、PREVIOUS 2 图、CURRENT 2 图
 
 - 模型：`nova819/sole-r1-v7-success`、`nova819/sole-r1-v7-full`
 - 数据：`nova819/sole-r1-v7-success-data`、`nova819/sole-r1-v7-failure-data`
-
-上述是发布目标名称，使用前核对上传是否完整；本代码整理不代表后台权重上传已经完成。
-
-RL 使用另一个保留上游历史的 RLinf 仓库。reward 为 `clip(progress,0,100)/100 - 1`；完整轨迹 sequential stride 20、线性插值、每副本 batch 4。协议失败按 RL 接口规则排除整条 episode；不要用伪造分数填补。
 
 ## 配套代码仓库
 
