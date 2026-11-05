@@ -1,6 +1,6 @@
 # 使用说明
 
-所有 `/your/...` 路径须替换为本机位置。先复制 `configs/paths.example.sh` 到 Git 之外的私有配置文件，填写路径后 source，再执行 `source scripts/data_disk_env.sh`。数据、缓存、输出都必须落在数据盘。
+所有 `/your/...` 路径须替换为本机位置。先复制 `configs/paths.example.sh` 到 Git 之外的私有配置文件，填写路径后 source，再执行 `source scripts/data_disk_env.sh`。目录可放在任意可写磁盘；默认使用用户目录，也可设置到共享存储。
 
 ## 已发布数据训练
 

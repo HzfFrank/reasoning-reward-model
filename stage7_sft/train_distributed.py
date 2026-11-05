@@ -170,6 +170,11 @@ def main():
         print(json.dumps({'status': 'completed', 'global_step': result.global_step,
                           'final_model': str(out / 'final_model')}))
 
+    # Keep every rank alive until rank 0 finishes exporting the final model.
+    if torch.distributed.is_initialized():
+        torch.distributed.barrier()
+        torch.distributed.destroy_process_group()
+
 
 if __name__ == '__main__':
     main()

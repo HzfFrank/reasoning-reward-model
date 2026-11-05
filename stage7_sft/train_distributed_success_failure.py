@@ -172,7 +172,7 @@ def main():
     result = trainer.train(resume_from_checkpoint=resume)
     if result.global_step != 919:
         raise RuntimeError(f'unexpected final optimizer step {result.global_step}')
-    if trainer.is_world_process_zero:
+    if trainer.is_world_process_zero():
         atomic_json(run / 'train_summary.json', {
             'status': 'train_complete', 'optimizer_steps': result.global_step,
             'train_loss': result.training_loss, 'train_runtime_seconds': time.monotonic() - started,
@@ -184,11 +184,16 @@ def main():
     plugin.optim_state_dict_config = None
     plugin.set_state_dict_type('FULL_STATE_DICT')
     trainer.save_model(str(run / 'final_model'))
-    if trainer.is_world_process_zero:
+    if trainer.is_world_process_zero():
         processor.save_pretrained(run / 'final_model')
         atomic_json(run / 'final_model/v7_protocol_manifest.json', manifest)
         print(json.dumps({'status': 'completed', 'global_step': result.global_step,
                           'final_model': str(run / 'final_model')}))
+
+    # Keep every rank alive until rank 0 finishes exporting the final model.
+    if torch.distributed.is_initialized():
+        torch.distributed.barrier()
+        torch.distributed.destroy_process_group()
 
 
 if __name__ == '__main__': main()

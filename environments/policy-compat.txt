@@ -1,0 +1,18 @@
+# One coherent NVIDIA OpenPI/LIBERO stack after the RLinf official installer.
+# rlinf-openpi 0.1.1 declares torch==2.7.1.
+torch==2.7.1
+torchvision==0.22.1
+torchaudio==2.7.1
+torchcodec==0.3.0
+# Newer dm-control pulls MuJoCo beyond rlinf-libero's supported range.
+dm-control==1.0.34
+mujoco==3.3.7
+# OpenPI's patched distribution shares the transformers namespace; both
+# distributions must describe the same version, and the patched one is last.
+transformers==4.53.2
+rlinf-transformer-openpi==4.53.2
+rlinf-openpi==0.1.1
+rlinf-libero==0.1.3
+
+# Keep the native runner on the Ray version used in our platform runs.
+ray==2.55.1
