@@ -1,6 +1,6 @@
 # 交接状态：2026-11-05
 
-本地源码整理版，尚未推送 GitHub。正式 teacher/student 模板保持原文；实验输出、模型、临时验收驱动和旧测试不纳入源码。
+源码已发布至 [HzfFrank/reasoning-reward-model](https://github.com/HzfFrank/reasoning-reward-model)，配套RL训练分支为 [handoff/v7-rl-training](https://github.com/HzfFrank/RLinf/tree/handoff/v7-rl-training)。正式 teacher/student 模板保持原文；实验输出、模型、临时验收驱动和旧测试不纳入源码。
 
 ## 已完成的真实小规模验证
 
@@ -32,7 +32,7 @@ SFT小测使用两条已有正式训练样本；本轮新API样本另行通过�
 
 新reward环境实际完成两卡全参数SFT一次更新、最终模型导出；新policy环境实际完成17步LIBERO采集，调用新reward环境加载本轮导出模型，完成两次sequential查询、17条奖励回填、一次PPO更新和checkpoint回读。修复了混训入口两处rank0判断缺少方法调用，以及SFT导出后的分布式退出同步。固定模板、奖励公式和训练超参数未变。
 
-本次仍不是八卡Ray/FSDP平台复验；操作系统图形库和驱动沿用宿主机，legacy采集环境未重建。测试驱动和大文件在Git仓库外的`checks/clean_env_20261105`。Google Doc及远端发布尚未进行。
+本次仍不是八卡Ray/FSDP平台复验；操作系统图形库和驱动沿用宿主机，legacy采集环境未重建。测试驱动和大文件在Git仓库外的`checks/clean_env_20261105`。上述验证完成时尚未发布；现代码已推送GitHub，Google Doc待模型/数据发布状态核对后整理。
 
 最终安装脚本另在两个空目录完整复验通过，安装后的policy核心版本与真实运行环境一致。该参考policy环境的Torch/MuJoCo与旧环境不同，八卡正式训练前应执行现有平台短训入口。
 
