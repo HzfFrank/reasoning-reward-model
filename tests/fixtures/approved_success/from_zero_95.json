@@ -1,0 +1,170 @@
+{
+  "raw_response": "{\n  \"conflict_reason\": null,\n  \"evidence_frames\": [0, 71, 85, 95],\n  \"label_visual_conflict\": false,\n  \"mode\": \"from_zero\",\n  \"progress\": {\n    \"reason\": \"The bowl has been picked up and transported from beside the cookie box to directly over the plate, bringing the task close to completion. The gripper remains at the bowl, so release and stable placement are not yet established.\"\n  },\n  \"state\": {\n    \"established\": \"The target bowl has been lifted and moved over the plate.\",\n    \"global_context\": \"The task is to move the black bowl beside the cookie box onto the white plate with red rings.\",\n    \"remaining\": \"Finish lowering the bowl onto the plate and release it.\"\n  },\n  \"update\": {\n    \"comparison\": \"Comparing the two observations, the bowl has moved from its starting position beside the cookie box to a low position over the plate.\",\n    \"current_observation\": \"At the current timestep, the gripper holds the bowl directly over the plate, with the plate's red rim visible beneath it.\",\n    \"reference_observation\": \"At the initial timestep, the bowl rests on the table beside the cookie box, separate from the plate, while the gripper is away from it.\"\n  }\n}",
+  "structured": {
+    "conflict_reason": null,
+    "evidence_frames": [
+      0,
+      71,
+      85,
+      95
+    ],
+    "label_visual_conflict": false,
+    "mode": "from_zero",
+    "progress": {
+      "reason": "The bowl has been picked up and transported from beside the cookie box to directly over the plate, bringing the task close to completion. The gripper remains at the bowl, so release and stable placement are not yet established."
+    },
+    "state": {
+      "established": "The target bowl has been lifted and moved over the plate.",
+      "global_context": "The task is to move the black bowl beside the cookie box onto the white plate with red rings.",
+      "remaining": "Finish lowering the bowl onto the plate and release it."
+    },
+    "update": {
+      "comparison": "Comparing the two observations, the bowl has moved from its starting position beside the cookie box to a low position over the plate.",
+      "current_observation": "At the current timestep, the gripper holds the bowl directly over the plate, with the plate's red rim visible beneath it.",
+      "reference_observation": "At the initial timestep, the bowl rests on the table beside the cookie box, separate from the plate, while the gripper is away from it."
+    }
+  },
+  "completion": "<think><update>At the initial timestep, the bowl rests on the table beside the cookie box, separate from the plate, while the gripper is away from it. At the current timestep, the gripper holds the bowl directly over the plate, with the plate's red rim visible beneath it. Comparing the two observations, the bowl has moved from its starting position beside the cookie box to a low position over the plate.</update><state>The task is to move the black bowl beside the cookie box onto the white plate with red rings. The target bowl has been lifted and moved over the plate. Finish lowering the bowl onto the plate and release it.</state><progress>Initial task progress was 0%. The bowl has been picked up and transported from beside the cookie box to directly over the plate, bringing the task close to completion. The gripper remains at the bowl, so release and stable placement are not yet established. Current task progress is estimated at 95%.</progress></think><answer>95%</answer>",
+  "images": [
+    {
+      "sha256": "85278ec3f6242244442fba4333dd76538a6b9adb8ed05eb8cb717b12a77eb48d",
+      "frame": 0,
+      "view": "main",
+      "role": "global",
+      "label": "GLOBAL frame=0 view=main role=global"
+    },
+    {
+      "sha256": "4566a0731c5dc7e81407cffccd275de8bb6ec45fb52651bec6f0d0649dec83ca",
+      "frame": 0,
+      "view": "wrist",
+      "role": "global",
+      "label": "GLOBAL frame=0 view=wrist role=global"
+    },
+    {
+      "sha256": "55f8c3748ba2d834880e279aebc6b652de5d98b968567c23f957eab64d193e49",
+      "frame": 14,
+      "view": "main",
+      "role": "global",
+      "label": "GLOBAL frame=14 view=main role=global"
+    },
+    {
+      "sha256": "9513f58394f92ec527c457634a561dd7ae0bba2b5264a0affb766f72c142b96b",
+      "frame": 14,
+      "view": "wrist",
+      "role": "global",
+      "label": "GLOBAL frame=14 view=wrist role=global"
+    },
+    {
+      "sha256": "0606536bfda25411138e014eb833c6454e75ef7d4dd08353be955795ad612f1e",
+      "frame": 28,
+      "view": "main",
+      "role": "global",
+      "label": "GLOBAL frame=28 view=main role=global"
+    },
+    {
+      "sha256": "bd12bedea3845eeb0925b371b775e8e4b44273f25c718b2f905a41bf7b6ad614",
+      "frame": 28,
+      "view": "wrist",
+      "role": "global",
+      "label": "GLOBAL frame=28 view=wrist role=global"
+    },
+    {
+      "sha256": "c41b7dafa0e631bb5aa512cbfa862b0ee654dd8190ff64b2b1c74aa16a012bbe",
+      "frame": 42,
+      "view": "main",
+      "role": "global",
+      "label": "GLOBAL frame=42 view=main role=global"
+    },
+    {
+      "sha256": "9b06fbb232a1de78c5829605dd4b3df57b5e8b385615930e459bf6f7b5ea5aee",
+      "frame": 42,
+      "view": "wrist",
+      "role": "global",
+      "label": "GLOBAL frame=42 view=wrist role=global"
+    },
+    {
+      "sha256": "e74450ce7a3aa5ea6073db2432025e3126b83c67ba8e82a93488c1274c38dcbd",
+      "frame": 57,
+      "view": "main",
+      "role": "global",
+      "label": "GLOBAL frame=57 view=main role=global"
+    },
+    {
+      "sha256": "0ac9d8983000ba2c92f1e8e34fb110cbcd8d14c295497bcc7e409cacbc410581",
+      "frame": 57,
+      "view": "wrist",
+      "role": "global",
+      "label": "GLOBAL frame=57 view=wrist role=global"
+    },
+    {
+      "sha256": "eb53445e11f2c635d26403a85cfd4f4f4d4a427b3e59a717cdac250f9ff87215",
+      "frame": 71,
+      "view": "main",
+      "role": "global",
+      "label": "GLOBAL frame=71 view=main role=global"
+    },
+    {
+      "sha256": "21938a379f0962c8728ca9ee210c1c5b999c2781a0d6aa30d1ac6d2364a25276",
+      "frame": 71,
+      "view": "wrist",
+      "role": "global",
+      "label": "GLOBAL frame=71 view=wrist role=global"
+    },
+    {
+      "sha256": "fbe275d3ba59b870eaf4dde2c0256b22a4d52147f0f827ab523900d46840a69b",
+      "frame": 85,
+      "view": "main",
+      "role": "global",
+      "label": "GLOBAL frame=85 view=main role=global"
+    },
+    {
+      "sha256": "35405e1c4f1ff5e1b012e41ebc35bfd5b84ee587ef3d8d8995f71cb522b04278",
+      "frame": 85,
+      "view": "wrist",
+      "role": "global",
+      "label": "GLOBAL frame=85 view=wrist role=global"
+    },
+    {
+      "sha256": "6818a5cdecad81f105341c8866819a9c880a23033f1ece1ded3307679e0fc68a",
+      "frame": 99,
+      "view": "main",
+      "role": "global",
+      "label": "GLOBAL frame=99 view=main role=global"
+    },
+    {
+      "sha256": "855863d2eedc375a259b284783a999d421599d9395a600687a38be2f3898a988",
+      "frame": 99,
+      "view": "wrist",
+      "role": "global",
+      "label": "GLOBAL frame=99 view=wrist role=global"
+    },
+    {
+      "sha256": "85278ec3f6242244442fba4333dd76538a6b9adb8ed05eb8cb717b12a77eb48d",
+      "frame": 0,
+      "view": "main",
+      "role": "initial",
+      "label": "INITIAL frame=0 view=main role=initial"
+    },
+    {
+      "sha256": "4566a0731c5dc7e81407cffccd275de8bb6ec45fb52651bec6f0d0649dec83ca",
+      "frame": 0,
+      "view": "wrist",
+      "role": "initial",
+      "label": "INITIAL frame=0 view=wrist role=initial"
+    },
+    {
+      "sha256": "cea4560199f6f7a47e20057a38b247d018c4de4a0e021227cebda1cdf0048d69",
+      "frame": 95,
+      "view": "main",
+      "role": "current",
+      "label": "CURRENT frame=95 view=main role=current"
+    },
+    {
+      "sha256": "35ac1d13041584e358106e902d1dff3b96b21e7dff14ce3ae9ba831bf91fd41f",
+      "frame": 95,
+      "view": "wrist",
+      "role": "current",
+      "label": "CURRENT frame=95 view=wrist role=current"
+    }
+  ]
+}

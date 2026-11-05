@@ -1,0 +1,88 @@
+{
+  "version": "v7_success_failure_mixed_exposure_v1",
+  "seed": 7,
+  "success_sha256": "2a192927edf004e94f56bb8f2fdd060b42ae3329c3d530561b01fe54f5a4c91a",
+  "success_validation_sha256": "f4504cbb6c3bd56c9d4dcc1dda3b7503b8cf0187ebd85fe49aab8165f481de6d",
+  "failure_sha256": "9fc363e26f69c59d9498156aa69c77a029f53332de1a8387a009a1bb54350bd5",
+  "failure_audit_sha256": "1e50fe40b0dd82552caac4caa94392901bd397e7416c3d1d2a278ce70ab71ee8",
+  "previous_run_manifest_sha256": "c8c90b87fac0a01645386cfe1cacbe701858fd5725ec900ad155531b52948616",
+  "prompt_version": "v7_student_grounded_contract_v1",
+  "template_sha256": "4300d1b1e9e2d6b74eae366bc70a0e75a312d741144900db2b505c9d8e0178ce",
+  "success_unique": 13364,
+  "failure_unique": 116,
+  "success_exposures": 13364,
+  "failure_exposures": 1336,
+  "failure_padding_exposures": 4,
+  "logical_plan_length": 14700,
+  "physical_plan_length": 14704,
+  "effective_batch_size": 16,
+  "optimizer_steps": 919,
+  "checkpoints": {
+    "50_percent_success": {
+      "step": 460,
+      "success_exposures": 6692,
+      "failure_exposures": 668,
+      "padding_exposures": 0
+    },
+    "100_percent_success": {
+      "step": 919,
+      "success_exposures": 13364,
+      "failure_exposures": 1336,
+      "padding_exposures": 4
+    }
+  },
+  "failure_exposure_min": 11,
+  "failure_exposure_max": 12,
+  "physical_failure_exposure_min": 11,
+  "physical_failure_exposure_max": 12,
+  "failure_unique_by_type": {
+    "wrong_object": 10,
+    "d1": 29,
+    "drop": 27,
+    "wrong_place": 9,
+    "miss": 16,
+    "d2": 25
+  },
+  "failure_exposure_by_type": {
+    "d1": 336,
+    "drop": 311,
+    "miss": 182,
+    "d2": 290,
+    "wrong_place": 103,
+    "wrong_object": 114
+  },
+  "failure_unique_by_task": {
+    "7": 20,
+    "2": 8,
+    "3": 14,
+    "5": 10,
+    "6": 15,
+    "8": 9,
+    "0": 4,
+    "4": 16,
+    "9": 7,
+    "1": 13
+  },
+  "failure_exposure_by_task": {
+    "3": 161,
+    "9": 82,
+    "5": 116,
+    "7": 227,
+    "2": 92,
+    "4": 185,
+    "8": 101,
+    "6": 171,
+    "1": 154,
+    "0": 47
+  },
+  "mixed_train_sha256": "58dcca6499702a797c682e0341636342a3d9d8f83ac19b3c6b77b2a4324fb9b2",
+  "exposure_plan_sha256": "3d58129f647a1ab199fa15d6c90af7925ca0c2cd18572c073bcddf838f8f33b8",
+  "rank_shard_check": "Accelerate BatchSamplerShard 8 ranks: exactly-once over physical global plan",
+  "padding_source_ids": [
+    "failure_short_548e755ef2f16d1772ba",
+    "failure_short_ffe022d0e9f8f5e2f73c",
+    "failure_short_2de4f76f4beacf4e2cdc",
+    "failure_short_e9c2439bb8e9debcf1eb"
+  ],
+  "training": "not_started"
+}

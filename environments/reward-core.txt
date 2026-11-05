@@ -1,0 +1,9 @@
+# Install matching PyTorch 2.9.0 separately; observed reward Python is 3.10.12.
+transformers==4.57.3
+accelerate==1.12.0
+safetensors==0.7.0
+numpy==1.26.4
+openai==2.14.0
+tomli==2.3.0
+tqdm==4.67.1
+pytest==9.0.2

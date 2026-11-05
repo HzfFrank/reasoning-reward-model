@@ -1,0 +1,542 @@
+{
+  "description": "Original source hashes before portability edits. No weights, datasets, credentials, runtime logs included.",
+  "files": [
+    {
+      "path": "stage7_tools/calibrate_spatial_failure_coverage.py",
+      "source_sha256": "c74b7a03ef64e65c2960cf6db083393a715fd37a895605d54360c52829abb09d",
+      "bytes": 7385
+    },
+    {
+      "path": "stage7_sft/control.py",
+      "source_sha256": "1ef46eb1bd9b11cf8f34c0ea37a534e27e1703990801d327442853185175c0ed",
+      "bytes": 1198
+    },
+    {
+      "path": "stage7_sft/final_episode_inference.py",
+      "source_sha256": "cfd45f04e30660220f47342cb4870e6c41ab192e05d419238da2adef6b14a229",
+      "bytes": 10828
+    },
+    {
+      "path": "stage7_tools/finalize_failure_event_aligned.py",
+      "source_sha256": "2db6ae76443226627a6f00ff9faf45a74d4d864ef11b25f34aa148ce3e5590cc",
+      "bytes": 7939
+    },
+    {
+      "path": "stage7_tools/geometry_progress_v1.py",
+      "source_sha256": "b419a10b95969baa49393e3974483e24ba0edb88bc1ee3fa75629bfbbcf30bf3",
+      "bytes": 15007
+    },
+    {
+      "path": "stage7_tools/geometry_progress_v2.py",
+      "source_sha256": "fe3f11bb8c4dcbe53c0b584b2c9d3b342be9044f0a1640c7b7f4da981f80a8ae",
+      "bytes": 14895
+    },
+    {
+      "path": "stage7_sft/inference.py",
+      "source_sha256": "a89613e5917093d6f6c6fc8ec00ebd048a04d026d357ad8218698ef9fab77207",
+      "bytes": 9273
+    },
+    {
+      "path": "stage7_sft/intermediate_episode_inference.py",
+      "source_sha256": "64907f7c6d867fee8c13713bdc4a3b585861968b6d5108477b342aa24e0bae4f",
+      "bytes": 9259
+    },
+    {
+      "path": "stage7_sft/optimized_final_episode_inference.py",
+      "source_sha256": "24be689ca873419e6eaa2a97212fc7c6f88c86be41abd4d3dcb65c7f7124a955",
+      "bytes": 738
+    },
+    {
+      "path": "stage7_tools/perturbed_rollout_pilot.py",
+      "source_sha256": "9365f44af197bbdda3344e203755b2734f4822804262b9985f040f6d5f0d7ae9",
+      "bytes": 14758
+    },
+    {
+      "path": "stage7_sft/prepare_success_failure_mix.py",
+      "source_sha256": "189efdcee32f1a760f27a33ffaf63c2920d637bbedb74b94d54b47e97f9abc79",
+      "bytes": 11956
+    },
+    {
+      "path": "stage7_sft/processing.py",
+      "source_sha256": "6ca9e8cf4d1539b3d11bf0f501e01770a10c5cd800a95f7f9006b861dc73d9c7",
+      "bytes": 3772
+    },
+    {
+      "path": "stage7_tools/production_calibrate_spatial.py",
+      "source_sha256": "93fc622d8b55a07fe00f8f29b6461bf3f163b5b450d133ee16e57df1ef57cc93",
+      "bytes": 7393
+    },
+    {
+      "path": "stage7_tools/production_failure_collect_diverse.py",
+      "source_sha256": "4a981776ec1a4f4d3df6a55519f910038a706d3c8d7889474802227d7dae207a",
+      "bytes": 41069
+    },
+    {
+      "path": "stage7_tools/production_failure_event_diverse.py",
+      "source_sha256": "4c48c14986b10e1bd35cf9e61bf54bf4eed498af668be4cb07476f4fb43dde38",
+      "bytes": 15368
+    },
+    {
+      "path": "stage7_tools/production_failure_export.py",
+      "source_sha256": "880f46a933d0ade4b9e47744209fb03c08262e425fad8b37dc66c1dc12211ed3",
+      "bytes": 7326
+    },
+    {
+      "path": "stage7_tools/production_failure_score.py",
+      "source_sha256": "5f7a7d620464de67528e10beb10df09201dc306a779bfcaccd4b161ef4d90564",
+      "bytes": 4405
+    },
+    {
+      "path": "stage7_sft/prompts.py",
+      "source_sha256": "e2bacdb9441bacbfebb377b6001276b4993303fe9de25fd90af43fa146a5bb66",
+      "bytes": 3837
+    },
+    {
+      "path": "stage7_sft/protocol.py",
+      "source_sha256": "164e28bdee87378160b671a932889381f79be44564a185e6c16cfc5cf125c583",
+      "bytes": 11128
+    },
+    {
+      "path": "stage7_tools/retry_event_aligned_two_cot.py",
+      "source_sha256": "04e203816a434560c6efb92cede8b4e6452cbac7fca4c389b95e5c2e55dac728",
+      "bytes": 5433
+    },
+    {
+      "path": "stage7_tools/run_event_aligned_116_cot_bulk.py",
+      "source_sha256": "312379437b54b6c02271a21f010a6935cf388b869054582a37e5bf9866322006",
+      "bytes": 16661
+    },
+    {
+      "path": "stage7_tools/run_short_failure_six_review.py",
+      "source_sha256": "f71af2973fd381fe4868b7a4c5efb6a5fd7ccbc216cd7a9a3c4b7d4e4999c94e",
+      "bytes": 5527
+    },
+    {
+      "path": "stage7_tools/run_v7_geometry_v2_cot_examples.py",
+      "source_sha256": "e2ef6d8258f2adcf94370bb254c8edd61946b73acb371776f8c91718fdb59500",
+      "bytes": 16459
+    },
+    {
+      "path": "stage7_tools/run_v7_grounded_contract.py",
+      "source_sha256": "f7e20cda63646bfcad9793d5dd57e4f37cd480ab5bdfb437d6580a91a30e5980",
+      "bytes": 10503
+    },
+    {
+      "path": "stage7_sft/runtime.py",
+      "source_sha256": "19773d8bc125ed83c02f2f74d83cd60861b1cb72332012386d3403d82f7b4d53",
+      "bytes": 4832
+    },
+    {
+      "path": "stage7_tools/sample_failure_event_aligned.py",
+      "source_sha256": "fd48f9f1bc5ebd67259b73d795bc270262e836d4da56013a12d594b8c0768ea0",
+      "bytes": 16567
+    },
+    {
+      "path": "stage7_sft/sampling.py",
+      "source_sha256": "21b3742b93ed058de87b9d1dee9d4391c4c8597f4e5a56d4418680626f497c8f",
+      "bytes": 567
+    },
+    {
+      "path": "stage7_tools/split_failure_short_sequential.py",
+      "source_sha256": "1d6754d98b4f9da0ef428e09e50bf83a19541f859a9dc6a79e36624f01110900",
+      "bytes": 22846
+    },
+    {
+      "path": "stage7_tools/split_failure_short_sequential_corrected.py",
+      "source_sha256": "ce0d6d3a35c15899ae34fa416aa5cc7541723f6a473960ae78b0b428b81b7c4f",
+      "bytes": 22097
+    },
+    {
+      "path": "stage7_sft/train_distributed.py",
+      "source_sha256": "200775d420f7706e16b5b90c8822f87a24e77b4a2b7c659b44363237ebf24838",
+      "bytes": 8775
+    },
+    {
+      "path": "stage7_sft/train_distributed_success_failure.py",
+      "source_sha256": "e071df4119859b49981171930da7f1a2ceb74ca7bac12b80d4d4daf903ba2bb8",
+      "bytes": 10415
+    },
+    {
+      "path": "stage7_tools/v7_bulk_api.py",
+      "source_sha256": "e737f3c4b3c7e61c240779e42a99361e3eb05ad3f9138d0c74aa2eb166bba2e5",
+      "bytes": 32635
+    },
+    {
+      "path": "stage7_tools/v7_bulk_grounded.py",
+      "source_sha256": "fcdaa84fa4bc216ff3e00f9a6f3685e72ad77adbc3f7f53769e74752cca829b7",
+      "bytes": 36154
+    },
+    {
+      "path": "stage7_tools/v7_geometry_v2_cot_teacher.py",
+      "source_sha256": "d2ee47f1b79e5278b4111d68d6968f2876b28a8cd808facb08bef680a599f6a6",
+      "bytes": 1376
+    },
+    {
+      "path": "stage7_tools/v7_grounded_contract_templates.py",
+      "source_sha256": "796f2480b4b2438230596ecb8d0620a89c69ab77d118b18f7bc670ef295d71d7",
+      "bytes": 4030
+    },
+    {
+      "path": "stage7_tools/v7_short_failure_teacher.py",
+      "source_sha256": "ef27bf1d9dafb950464f0c09d5e853171b21287f6bbd4985c59a7e3b8ab7905d",
+      "bytes": 1254
+    },
+    {
+      "path": "stage7_tools/v7_spatial_def_teacher.py",
+      "source_sha256": "56ce154e01cadd0fc208f89a497d734acc337fd8b720e574f9d1fd8b394ccf9b",
+      "bytes": 1363
+    },
+    {
+      "path": "stage7_sft/visual_patch_linear.py",
+      "source_sha256": "e7d77d20835a3b0c01620a3c36ef019cb23127937d6be8f9a4d105048c1690b3",
+      "bytes": 2067
+    },
+    {
+      "path": "stage7_sft/test_control.py",
+      "source_sha256": "277691f0fc9c4353b892687db378231fbd450b67eec8afc067790e4065d100d5",
+      "bytes": 1335
+    },
+    {
+      "path": "stage7_sft/test_gradient_accumulation.py",
+      "source_sha256": "49639c1edd85424e3861fbbd7d549090e49abd0caf04754a4a2956577adc4dfc",
+      "bytes": 1022
+    },
+    {
+      "path": "stage7_sft/test_grounded_contract.py",
+      "source_sha256": "58da3a4da750230ded4d64db41d6340caa81141f1a7933febf28a35637cdbc43",
+      "bytes": 2835
+    },
+    {
+      "path": "stage7_sft/test_protocol.py",
+      "source_sha256": "0d627f5877271a8d273885294fca9721483cabad55b7f5c195ba4ddcd69056ac",
+      "bytes": 2403
+    },
+    {
+      "path": "stage7_tools/geometry_progress_v1.json",
+      "source_sha256": "8db9900efc62232411fd8538b0444c333d50178b8ceaf558175ccbcc6892a8a5",
+      "bytes": 1756
+    }
+  ],
+  "local_import_edges": [
+    [
+      "stage7_sft/final_episode_inference.py",
+      "stage7_sft/inference.py"
+    ],
+    [
+      "stage7_sft/final_episode_inference.py",
+      "stage7_sft/intermediate_episode_inference.py"
+    ],
+    [
+      "stage7_sft/final_episode_inference.py",
+      "stage7_sft/processing.py"
+    ],
+    [
+      "stage7_sft/final_episode_inference.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_sft/final_episode_inference.py",
+      "stage7_sft/sampling.py"
+    ],
+    [
+      "stage7_sft/inference.py",
+      "stage7_sft/processing.py"
+    ],
+    [
+      "stage7_sft/inference.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_sft/inference.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_sft/inference.py",
+      "stage7_sft/runtime.py"
+    ],
+    [
+      "stage7_sft/inference.py",
+      "stage7_sft/sampling.py"
+    ],
+    [
+      "stage7_sft/intermediate_episode_inference.py",
+      "stage7_sft/inference.py"
+    ],
+    [
+      "stage7_sft/intermediate_episode_inference.py",
+      "stage7_sft/processing.py"
+    ],
+    [
+      "stage7_sft/intermediate_episode_inference.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_sft/intermediate_episode_inference.py",
+      "stage7_sft/sampling.py"
+    ],
+    [
+      "stage7_sft/optimized_final_episode_inference.py",
+      "stage7_sft/final_episode_inference.py"
+    ],
+    [
+      "stage7_sft/optimized_final_episode_inference.py",
+      "stage7_sft/visual_patch_linear.py"
+    ],
+    [
+      "stage7_sft/prepare_success_failure_mix.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_sft/prepare_success_failure_mix.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_sft/processing.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_sft/protocol.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_sft/runtime.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_sft/train_distributed.py",
+      "stage7_sft/processing.py"
+    ],
+    [
+      "stage7_sft/train_distributed.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_sft/train_distributed.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_sft/train_distributed_success_failure.py",
+      "stage7_sft/processing.py"
+    ],
+    [
+      "stage7_sft/train_distributed_success_failure.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_sft/train_distributed_success_failure.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_sft/train_distributed_success_failure.py",
+      "stage7_sft/train_distributed.py"
+    ],
+    [
+      "stage7_tools/calibrate_spatial_failure_coverage.py",
+      "stage7_tools/geometry_progress_v1.py"
+    ],
+    [
+      "stage7_tools/calibrate_spatial_failure_coverage.py",
+      "stage7_tools/geometry_progress_v2.py"
+    ],
+    [
+      "stage7_tools/geometry_progress_v2.py",
+      "stage7_tools/geometry_progress_v1.py"
+    ],
+    [
+      "stage7_tools/production_calibrate_spatial.py",
+      "stage7_tools/calibrate_spatial_failure_coverage.py"
+    ],
+    [
+      "stage7_tools/production_calibrate_spatial.py",
+      "stage7_tools/geometry_progress_v1.py"
+    ],
+    [
+      "stage7_tools/production_calibrate_spatial.py",
+      "stage7_tools/geometry_progress_v2.py"
+    ],
+    [
+      "stage7_tools/production_failure_collect_diverse.py",
+      "stage7_tools/geometry_progress_v2.py"
+    ],
+    [
+      "stage7_tools/production_failure_event_diverse.py",
+      "stage7_tools/production_failure_export.py"
+    ],
+    [
+      "stage7_tools/production_failure_event_diverse.py",
+      "stage7_tools/production_failure_score.py"
+    ],
+    [
+      "stage7_tools/production_failure_export.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_tools/production_failure_export.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_tools/production_failure_score.py",
+      "stage7_tools/geometry_progress_v1.py"
+    ],
+    [
+      "stage7_tools/production_failure_score.py",
+      "stage7_tools/geometry_progress_v2.py"
+    ],
+    [
+      "stage7_tools/production_failure_score.py",
+      "stage7_tools/production_failure_export.py"
+    ],
+    [
+      "stage7_tools/retry_event_aligned_two_cot.py",
+      "stage7_tools/run_event_aligned_116_cot_bulk.py"
+    ],
+    [
+      "stage7_tools/retry_event_aligned_two_cot.py",
+      "stage7_tools/run_short_failure_six_review.py"
+    ],
+    [
+      "stage7_tools/retry_event_aligned_two_cot.py",
+      "stage7_tools/run_v7_geometry_v2_cot_examples.py"
+    ],
+    [
+      "stage7_tools/run_event_aligned_116_cot_bulk.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_tools/run_event_aligned_116_cot_bulk.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_tools/run_event_aligned_116_cot_bulk.py",
+      "stage7_tools/run_short_failure_six_review.py"
+    ],
+    [
+      "stage7_tools/run_event_aligned_116_cot_bulk.py",
+      "stage7_tools/run_v7_geometry_v2_cot_examples.py"
+    ],
+    [
+      "stage7_tools/run_event_aligned_116_cot_bulk.py",
+      "stage7_tools/run_v7_grounded_contract.py"
+    ],
+    [
+      "stage7_tools/run_event_aligned_116_cot_bulk.py",
+      "stage7_tools/v7_short_failure_teacher.py"
+    ],
+    [
+      "stage7_tools/run_short_failure_six_review.py",
+      "stage7_tools/run_short_failure_six_review.py"
+    ],
+    [
+      "stage7_tools/run_short_failure_six_review.py",
+      "stage7_tools/run_v7_geometry_v2_cot_examples.py"
+    ],
+    [
+      "stage7_tools/run_short_failure_six_review.py",
+      "stage7_tools/run_v7_grounded_contract.py"
+    ],
+    [
+      "stage7_tools/run_short_failure_six_review.py",
+      "stage7_tools/v7_grounded_contract_templates.py"
+    ],
+    [
+      "stage7_tools/run_short_failure_six_review.py",
+      "stage7_tools/v7_short_failure_teacher.py"
+    ],
+    [
+      "stage7_tools/run_short_failure_six_review.py",
+      "stage7_tools/v7_spatial_def_teacher.py"
+    ],
+    [
+      "stage7_tools/run_v7_geometry_v2_cot_examples.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_tools/run_v7_geometry_v2_cot_examples.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_tools/run_v7_geometry_v2_cot_examples.py",
+      "stage7_sft/sampling.py"
+    ],
+    [
+      "stage7_tools/run_v7_geometry_v2_cot_examples.py",
+      "stage7_tools/run_v7_grounded_contract.py"
+    ],
+    [
+      "stage7_tools/run_v7_geometry_v2_cot_examples.py",
+      "stage7_tools/v7_geometry_v2_cot_teacher.py"
+    ],
+    [
+      "stage7_tools/run_v7_grounded_contract.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_tools/run_v7_grounded_contract.py",
+      "stage7_tools/v7_grounded_contract_templates.py"
+    ],
+    [
+      "stage7_tools/sample_failure_event_aligned.py",
+      "stage7_tools/split_failure_short_sequential_corrected.py"
+    ],
+    [
+      "stage7_tools/split_failure_short_sequential.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_tools/split_failure_short_sequential.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_tools/split_failure_short_sequential.py",
+      "stage7_sft/sampling.py"
+    ],
+    [
+      "stage7_tools/split_failure_short_sequential_corrected.py",
+      "stage7_tools/split_failure_short_sequential.py"
+    ],
+    [
+      "stage7_tools/v7_bulk_api.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_tools/v7_bulk_api.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_tools/v7_bulk_grounded.py",
+      "stage7_sft/processing.py"
+    ],
+    [
+      "stage7_tools/v7_bulk_grounded.py",
+      "stage7_sft/prompts.py"
+    ],
+    [
+      "stage7_tools/v7_bulk_grounded.py",
+      "stage7_sft/protocol.py"
+    ],
+    [
+      "stage7_tools/v7_bulk_grounded.py",
+      "stage7_tools/run_v7_grounded_contract.py"
+    ],
+    [
+      "stage7_tools/v7_bulk_grounded.py",
+      "stage7_tools/v7_bulk_api.py"
+    ],
+    [
+      "stage7_tools/v7_bulk_grounded.py",
+      "stage7_tools/v7_grounded_contract_templates.py"
+    ],
+    [
+      "stage7_tools/v7_geometry_v2_cot_teacher.py",
+      "stage7_tools/v7_grounded_contract_templates.py"
+    ],
+    [
+      "stage7_tools/v7_short_failure_teacher.py",
+      "stage7_tools/v7_spatial_def_teacher.py"
+    ],
+    [
+      "stage7_tools/v7_spatial_def_teacher.py",
+      "stage7_tools/v7_grounded_contract_templates.py"
+    ]
+  ]
+}
