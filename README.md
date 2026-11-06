@@ -99,6 +99,8 @@ CUDA_VISIBLE_DEVICES=0 "$PYTHON" inference.py \
 
 sequential 使用初始、前一、当前时刻的双视角拼图，并回灌上一次模型预测；from-zero 使用初始和当前双视角，传入 `--mode from_zero`。两种模式共用数据构造的 prompt 函数，推理不读取 progress 标签。输出逐查询保存原文 CoT、解析结果、帧号和实际输入文本。
 
+本分支的 `inference.py` 是发布整理时新增的本地推理入口，不调用官方 `reward_server`。官方服务的 vLLM 批处理/API 路径仍属于 [SOLE-R1 原仓库](https://github.com/Philip-MIT/sole-r1-model/tree/main/reward_server)，不能把本 CLI 的测试视为官方服务回归，也未保证两种后端输出逐字相同。
+
 推理 CLI 使用 Hugging Face 后端，方便在同一训练环境运行；输入拼图与提示词保留 v3 协议。首帧以0%初始化，查询最后一帧，格式错误会保留原文并报错。
 
 ## 7. 文件导航
