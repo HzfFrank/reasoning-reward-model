@@ -18,7 +18,7 @@ export PYTHON="$V7_REWARD_PYTHON"  # v3 脚本使用这个变量
 
 脚本直接使用现有 Python 3.10，从官方 PyPI 补齐 `environments/reward-core.txt` 的固定依赖并检查导入，不创建新环境，也不重新运行 `uv sync`。已满足的包复用，不匹配的项目依赖按文件版本调整；Torch 2.9.0、Transformers 4.57.3、DeepSpeed 0.15.4 是本项目实测组合。`--reuse` 保留为兼容写法，与默认行为相同。
 
-适配会安装或调整依赖，不修改任何模型权重。本机本次仅新增 TensorBoard 及其 4 个依赖，Torch、Transformers、vLLM、FlashAttention 未替换；不同版本的已有环境可能发生依赖升级或降级。已验证 v3/V7 的真实 GPU 运行，官方 reward_server 的完整 vLLM 服务回归尚未执行。
+适配会安装或调整依赖，不修改任何模型权重。本机本次仅新增 TensorBoard 及其 4 个依赖，Torch、Transformers、vLLM、FlashAttention 未替换；不同版本的已有环境可能发生依赖升级或降级。已验证 v3/V7 的真实 GPU 运行，并使用未修改的官方 `vlm_batch_decode` + vLLM 0.12.0 完成 sequential/from-zero 各两次预测。该检查覆盖官方模型解码后端；HTTP/RPC 服务启动器不属于本项目入口。
 
 如果官方环境安装在其他位置，执行适配前设置 `V7_REWARD_PYTHON=/absolute/path/to/python`。以后 v3、V7 和 RL reward worker 都使用同一个解释器；v3 分支的 `scripts/install.sh` 提供相同适配功能，两边无需重复安装。仅安装了软件环境还不包含模型权重和数据，仍需按 README 下载资产。
 
@@ -67,5 +67,7 @@ export PYTHONPATH="$V7_COLLECTION_REPO:$V7_REWARD_REPO/stage7_tools"
 不要在同一Python进程中切换两份RLinf；模块缓存不会随PYTHONPATH自动替换。两分支使用同一环境的LIBERO_CONFIG_PATH即可。
 
 实测：task6成功基线127动作、配对掉落186动作；前缀完整状态误差0，313帧几何标注无恢复异常；另复算历史task7的240帧，与旧环境两距离/progress完全一致。未验证所有任务与扰动，也不保证新旧环境重新rollout逐帧相同。旧环境版本清单保留为历史复现参考，不再作为协作者必装项。采集脚本的历史输出目录限制和原始资产交接仍须单独处理，不能把环境兼容当作一键重建全部数据。
+
+训练/本地推理使用 SDPA，官方 vLLM 使用其自带 attention 后端。本机独立 `flash_attn` 扩展存在旧二进制 ABI 不匹配，不能把它作为已验证的可选后端；以上已测入口不调用该扩展。
 
 实际安装/运行验证状态见[交接状态](交接状态_CN.md)。本机Ubuntu 22.04已有系统图形库和驱动，独立新建Python环境不等于重装操作系统；两卡测试也不等于八卡平台验收。

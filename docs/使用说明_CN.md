@@ -22,7 +22,16 @@ bash scripts/train_success.sh /your/data/success/train.local.jsonl "$V7_BASE_MOD
 bash scripts/train_mixed.sh "$V7_RUNS_ROOT/mixed_01"
 ```
 
-两种入口均使用单机八卡 torchrun，先做 CPU 预检，再启动 GPU 训练。模型初始化是 Qwen3-VL-8B-Instruct，不是从成功版 reward checkpoint 继续训练。完整版准备工具只支持已发布的 13,364+116 独立样本，严格使用冻结 exposure plan。扩充数据后须明确建立新计划，不能悄悄套用旧计数。
+正式入口默认使用单机八卡 torchrun，先做 CPU 预检，再启动 GPU 训练。完整版入口也支持 `NPROC=2/4`，通过梯度累积维持有效 batch=16。模型初始化是 Qwen3-VL-8B-Instruct，不是从成功版 reward checkpoint 继续训练。完整版准备工具只支持已发布的 13,364+116 独立样本，严格使用冻结 exposure plan。扩充数据后须明确建立新计划，不能悄悄套用旧计数。
+
+最小真实混训检查可使用独立准备目录执行：
+
+```bash
+NPROC=2 bash scripts/train_mixed.sh "$V7_RUNS_ROOT/mixed_check" --max-optimizer-steps 2 --stop-after-step 1
+NPROC=2 bash scripts/train_mixed.sh "$V7_RUNS_ROOT/mixed_check" --max-optimizer-steps 2
+```
+
+第一条保存第1步后退出，第二条自动恢复优化器、调度器、RNG与数据位置，完成第2步并导出 `final_model`。先用上面的准备工具建立 `mixed_check`；不要与正式运行共用目录。完整 checkpoint 含模型和优化器，单份约130 GiB，两个 checkpoint 加导出模型建议预留至少320 GiB配额。默认正式预算仍为919次更新。
 
 ## 完整轨迹推理
 
@@ -61,4 +70,4 @@ bash "$V7_RLINF_TRAINING/local_integration/v7_reward/native/run_portable_campaig
   long --campaign "$V7_ARTIFACTS/campaigns/experiment_01"
 ```
 
-短长训规则、恢复和历史验收证明均沿用 RL 分支实现；本次未修改其评估/保存频率，也未重跑八卡。不要把“源码可移植性检查”当作新机器八卡实测通过。
+短长训规则沿用 RL 分支实现。本次在新建 RLinf 环境和共用 SOLE-R1 环境中完成了原生 Ray/FSDP 两卡采集、评分、PPO、保存及独立重启续训，并检查了 TensorBoard 指标；正式八卡仍使用平台短训入口。

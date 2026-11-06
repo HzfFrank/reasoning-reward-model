@@ -30,11 +30,22 @@ def arguments():
     p.add_argument('--experiment-dir', type=Path, required=True)
     p.add_argument('--preflight-only', action='store_true')
     p.add_argument('--resume', choices=['auto', 'never'], default='auto')
+    p.add_argument('--world-size', type=int, default=8)
+    p.add_argument('--max-optimizer-steps', type=int, default=919)
+    p.add_argument('--stop-after-step', type=int,
+                   help='Save and exit at this step; resume keeps the original total budget.')
     return p.parse_args()
 
 
 def main():
     a = arguments()
+    if a.world_size not in (2, 4, 8):
+        raise ValueError('world size must be 2, 4 or 8; effective batch remains 16')
+    if not 1 <= a.max_optimizer_steps <= 919:
+        raise ValueError('max optimizer steps must be in [1, 919]')
+    if a.stop_after_step is not None and not 1 <= a.stop_after_step < a.max_optimizer_steps:
+        raise ValueError('stop-after-step must precede the total optimizer budget')
+    accumulation = 16 // a.world_size
     root = Path(__file__).resolve().parents[1]
     run = a.experiment_dir.resolve()
     from portable_paths import check_output
@@ -57,6 +68,7 @@ def main():
     checkpoint_steps = sorted(x['step'] for x in plan['checkpoints'].values())
     if checkpoint_steps != [460, 919]:
         raise ValueError('checkpoint schedule differs from frozen plan')
+    checkpoint_steps = sorted(set([s for s in checkpoint_steps if s <= a.max_optimizer_steps] + [a.max_optimizer_steps]))
     manifest = {
         'kind': 'v7_full_parameter_mixed_success_failure_sft', 'model_path': plan['model_path'],
         'data_path': str(data), 'data_sha256': plan['mixed_train_sha256'],
@@ -76,9 +88,9 @@ def main():
         'activation_checkpointing': True, 'optimizer': 'PyTorch fused AdamW',
         'learning_rate': 1e-5, 'betas': [0.9, 0.95], 'weight_decay': 0.1,
         'max_grad_norm': 1.0, 'lr_scheduler': 'constant', 'warmup_steps': 0,
-        'per_device_batch_size': 1, 'gradient_accumulation_steps': 2,
-        'world_size': 8, 'effective_batch_size': 16, 'epochs': 1.0,
-        'optimizer_steps': 919, 'checkpoint_steps': checkpoint_steps,
+        'per_device_batch_size': 1, 'gradient_accumulation_steps': accumulation,
+        'world_size': a.world_size, 'effective_batch_size': 16, 'epochs': 1.0,
+        'optimizer_steps': a.max_optimizer_steps, 'checkpoint_steps': checkpoint_steps,
         'sampler': 'SequentialSampler over one frozen global mixed plan; Accelerate BatchSamplerShard',
         'resume': 'Trainer FSDP model, optimizer, scheduler, per-rank RNG and global-step data skip',
         'save_total_limit': 2,
@@ -95,7 +107,7 @@ def main():
         if not (Path(plan['model_path']) / 'config.json').is_file():
             raise FileNotFoundError('local base model config missing')
         print(json.dumps({'status': 'preflight_pass', 'samples': len(samples),
-                          'steps': 919, 'checkpoint_steps': checkpoint_steps,
+                          'steps': a.max_optimizer_steps, 'checkpoint_steps': checkpoint_steps,
                           'data_sha256': plan['mixed_train_sha256']}))
         return
     import torch
@@ -104,8 +116,8 @@ def main():
     from processing import V7Collator, encode_sample, load_processor
 
     world = int(os.environ.get('WORLD_SIZE', '0'))
-    if world != 8 or not torch.cuda.is_available():
-        raise RuntimeError('this formal mixed SFT requires exactly eight torchrun GPU ranks')
+    if world != a.world_size or not torch.cuda.is_available():
+        raise RuntimeError(f'expected {a.world_size} torchrun GPU ranks with CUDA, got {world}')
     processor = load_processor(plan['model_path'], 65536)
 
     class LazyDataset(Dataset):
@@ -127,8 +139,10 @@ def main():
 
     class CheckpointCallback(TrainerCallback):
         def on_step_end(self, args, state, control, **kwargs):
-            if state.global_step in checkpoint_steps:
+            if state.global_step in checkpoint_steps or state.global_step == a.stop_after_step:
                 control.should_save = True
+            if state.global_step == a.stop_after_step:
+                control.should_training_stop = True
             return control
 
         def on_save(self, args, state, control, **kwargs):
@@ -138,7 +152,8 @@ def main():
 
     args = TrainingArguments(
         output_dir=str(run / 'checkpoints'), num_train_epochs=1.0,
-        per_device_train_batch_size=1, gradient_accumulation_steps=2,
+        max_steps=a.max_optimizer_steps,
+        per_device_train_batch_size=1, gradient_accumulation_steps=accumulation,
         learning_rate=1e-5, lr_scheduler_type='constant', warmup_steps=0,
         adam_beta1=0.9, adam_beta2=0.95, weight_decay=0.1,
         max_grad_norm=1.0, optim='adamw_torch_fused', bf16=True,
@@ -148,7 +163,7 @@ def main():
                      'use_orig_params': True, 'limit_all_gathers': True},
         remove_unused_columns=False, dataloader_num_workers=0,
         save_strategy='steps', save_steps=920, save_total_limit=2,
-        eval_strategy='no', logging_steps=10, report_to=[],
+        eval_strategy='no', logging_steps=min(10, a.max_optimizer_steps), report_to=[],
         seed=7, data_seed=7, save_safetensors=True, ignore_data_skip=False)
     trainer = OrderedTrainer(model=model, args=args, train_dataset=LazyDataset(),
         data_collator=V7Collator(processor.tokenizer.pad_token_id),
@@ -160,25 +175,48 @@ def main():
     resume = None
     if checkpoints and a.resume == 'auto':
         c = checkpoints[-1]
-        needed = [c / 'trainer_state.json', c / 'scheduler.pt', c / 'v7_protocol_manifest.json',
-                  c / 'pytorch_model_fsdp_0/.metadata', c / 'optimizer_0/.metadata']
-        needed += [c / f'rng_state_{i}.pth' for i in range(8)]
+        needed = [c / 'trainer_state.json', c / 'scheduler.pt', c / 'v7_protocol_manifest.json']
+        if (c / 'pytorch_model_fsdp_0/.metadata').is_file():
+            needed += [c / 'optimizer_0/.metadata']
+            checkpoint_type = 'SHARDED_STATE_DICT'
+        else:
+            index = c / 'model.safetensors.index.json'
+            needed += [index, c / 'pytorch_model_fsdp.bin', c / 'optimizer.bin']
+            if index.is_file():
+                shards = set(json.loads(index.read_text())['weight_map'].values())
+                if not shards:
+                    raise ValueError('empty checkpoint weight index')
+                needed += [c / name for name in shards]
+            checkpoint_type = 'FULL_STATE_DICT'
+        plugin = trainer.accelerator.state.fsdp_plugin
+        plugin.state_dict_config = None
+        plugin.optim_state_dict_config = None
+        plugin.set_state_dict_type(checkpoint_type)
+        needed += [c / f'rng_state_{i}.pth' for i in range(world)]
         if any(not p.is_file() for p in needed):
             raise ValueError(f'incomplete checkpoint; refuse model-only resume: {c}')
         if json.loads((c / 'v7_protocol_manifest.json').read_text()) != manifest:
             raise ValueError('checkpoint protocol differs from frozen run')
+        completed = json.loads((c / 'trainer_state.json').read_text())['global_step']
+        if a.stop_after_step is not None and completed >= a.stop_after_step:
+            raise ValueError('stop-after-step must be later than the resumed checkpoint')
         resume = str(c)
     started = time.monotonic()
     result = trainer.train(resume_from_checkpoint=resume)
-    if result.global_step != 919:
+    expected_step = a.stop_after_step or a.max_optimizer_steps
+    if result.global_step != expected_step:
         raise RuntimeError(f'unexpected final optimizer step {result.global_step}')
     if trainer.is_world_process_zero():
         atomic_json(run / 'train_summary.json', {
-            'status': 'train_complete', 'optimizer_steps': result.global_step,
+            'status': 'paused' if a.stop_after_step else 'train_complete', 'optimizer_steps': result.global_step,
             'train_loss': result.training_loss, 'train_runtime_seconds': time.monotonic() - started,
             'world_size': world, 'total_parameters': total, 'trainable_parameters': trainable,
             'effective_batch_size': 16, 'resumed_from': resume,
             'checkpoint_steps': checkpoint_steps})
+    if a.stop_after_step:
+        torch.distributed.barrier()
+        torch.distributed.destroy_process_group()
+        return
     plugin = trainer.accelerator.state.fsdp_plugin
     plugin.state_dict_config = None
     plugin.optim_state_dict_config = None
