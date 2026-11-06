@@ -14,5 +14,24 @@
     "configurable paths",
     "removed obsolete smoke entrypoints",
     "shared helper dependency closure retained"
-  ]
+  ],
+  "original_sha256": {
+    "stage2a_tools/libero_sft_e2e.py": "fffeb539c0da3f5cb6cd9f057ca9b5d9ac4249da01b60fcfdc5cc0d0b56ae434",
+    "stage2a_tools/sft_pipeline.py": "cf5cbe5addbc35216e8cf8c80d6286c021da01a1a81fec9b4e1aa0567f5b2835",
+    "stage3_tools/libero_rlvr_train.py": "eb0bffa61912b3243ccb707026c6e9fde7fa66d423e05e7338b9f05adfdb6626",
+    "stage3_tools/libero_rlvr_train_grpo_v3.py": "48ab6e44860a378e3c52b0536033dd6fc3e4d0e8dec9399031b88bbbf55983a7",
+    "stage3_tools/rlvr_core.py": "dd173362a15b23720b6f9abc2eb793fb87c6a022174d312fadb88040a34b2329",
+    "stage3_tools/tensorboard_event_writer.py": "008355dbad791e830a16b55d3126f16499d5461c02ac60477d6f4ee29ee16b70",
+    "DEEPSPEED_OR_FSDP_CONFIG/zero3_no_offload.json": "91af7035a2bd0a467dc8401a0e666936812f5c3746c93edf8780f33fb93068a7",
+    "RLinf/toolkits/libero_sole/generate_cot_dataset_v3.py": "d379cd4229011187f86d61962bb28f1c55edbe9ecd78d121e687709ee25c134f",
+    "RLinf/toolkits/libero_sole/compute_contact_progress_v3.py": "93368719e076d468064ef64f78778f8c4125a0b8076120fcad7ce7a8a151afd7",
+    "RLinf/toolkits/libero_sole/generate_cot_dataset_v2.py": "2a005f259f073167269723a5a04237ae8246166b50d7c7efdd2ef88ef3a4b5c8",
+    "RLinf/toolkits/libero_sole/__init__.py": "79db79d70cb2cabf1ffd11cdd9e867ca37633436a0076781e3f7dd4484f914fb",
+    "RLinf/toolkits/libero_sole/compute_contact_progress.py": "57888439826553de7a29e7e07a13b30ed470f38f61135007b9cb1fd8781ab18b",
+    "RLinf/toolkits/libero_sole/common.py": "ea7b1215213bf140fae582aaa7bb3c801da08db44b7f32e07bbc985846fd6dfa",
+    "RLinf/toolkits/libero_sole/compute_progress.py": "880581b352753a4a08b8ec74c2967d447f95c41f9c8850f2b66bc2b92f5cad91",
+    "RLinf/toolkits/libero_sole/merge_cot_dataset.py": "0a95122a2cfc5d4f0a447246cb3f10cdfadc5fff86018bbd7092c309be209167",
+    "RLinf/toolkits/libero_sole/sampling.py": "6398d031873f0dc0059965bacdd178400f66d37e7a04b0c7f90a77f6d5381e54",
+    "RLinf/toolkits/libero_sole/generate_cot_dataset.py": "46664067b1b442d86e5a18d83c501cda1b25bb747cd47e2fef0a740d945c7dca"
+  }
 }
