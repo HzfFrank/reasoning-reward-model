@@ -7,15 +7,20 @@
 ```bash
 git clone -b v3-reproduction https://github.com/HzfFrank/reasoning-reward-model.git sole-v3
 cd sole-v3
-bash scripts/install.sh .venv
-export PYTHON="$PWD/.venv/bin/python"
 ```
 
-需要 NVIDIA GPU、CUDA Toolkit（DeepSpeed 编译算子使用 nvcc）和 `uv`（可通过 `python -m pip install uv` 安装）。安装脚本使用 Python 3.10、PyTorch 2.9.0、Transformers 4.57.3、DeepSpeed 0.15.4、torchvision 0.24.0。完整依赖版本记录在 `requirements.lock.txt`。原有兼容的 SOLE-R1 环境可以直接设置 `PYTHON=/path/to/environment/bin/python`，无需重装。
+v3 和 V7 共用 **SOLE-R1 环境**，仿真与策略训练使用 **RLinf 环境**。SOLE-R1 官方在 `reward_server` 下执行 `uv sync`；本项目的安装入口在此基础上补齐共用依赖：
 
-V7 使用相同版本的 PyTorch/Transformers，但其训练不依赖 DeepSpeed。已有 V7 环境可以先对照 `requirements.txt`；不要直接升级或覆盖正在使用的环境。v3 单独环境复用 uv 的下载缓存，模型和数据也只需保存一份。
+```bash
+# 已有 SOLE-R1 环境：直接复用，补齐固定的项目依赖。
+bash scripts/install.sh /your/src/sole-r1-model
+export PYTHON=/your/src/sole-r1-model/reward_server/.venv/bin/python
+export V7_REWARD_PYTHON="$PYTHON"
+```
 
-仿真采集继续使用已发布的 [RLinf 数据采集分支](https://github.com/HzfFrank/RLinf/tree/handoff/v7-data-collection)，以及 V7 的 policy 环境。对已有轨迹进行几何计算、CoT 生成、SFT、RLVR 和推理只需上述 v3 环境。
+首次使用先按 [SOLE-R1 官方说明](https://github.com/Philip-MIT/sole-r1-model/blob/main/reward_server/README.md) 安装环境，再执行上述适配命令。适配脚本不创建环境或重跑官方安装。如果已从 V7 仓库完成这一步，只需设置 Python 路径。完整安装说明统一见 [SOLE-R1 与 RLinf 环境](https://github.com/HzfFrank/reasoning-reward-model/blob/main/docs/环境_CN.md)。
+
+仿真采集使用 [RLinf 数据采集分支](https://github.com/HzfFrank/RLinf/tree/handoff/v7-data-collection)和同一 RLinf 环境。已有轨迹的 v3 几何计算、CoT 生成、SFT、RLVR 和推理均使用 SOLE-R1 Python。
 
 ## 2. 下载现成的数据与模型
 
