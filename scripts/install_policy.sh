@@ -10,6 +10,7 @@ if [[ $# -gt 0 ]]; then shift; fi
 if [[ -e "$ENV_DIR" ]]; then echo "Environment already exists: $ENV_DIR; choose a new directory." >&2; exit 2; fi
 mkdir -p "$(dirname "$ENV_DIR")"
 ENV_DIR=$(cd "$(dirname "$ENV_DIR")" && pwd)/$(basename "$ENV_DIR")
+export UV_DEFAULT_INDEX=https://pypi.org/simple
 export LIBERO_CONFIG_PATH="${LIBERO_CONFIG_PATH:-$ENV_DIR/libero_config}"
 # Do not create ENV_DIR before RLinf's uv venv step.
 (

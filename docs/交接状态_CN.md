@@ -1,41 +1,23 @@
-# 交接状态：2026-11-05
+# 交接验证（2026-11-06）
 
-源码已发布至 [HzfFrank/reasoning-reward-model](https://github.com/HzfFrank/reasoning-reward-model)，配套RL训练分支为 [handoff/v7-rl-training](https://github.com/HzfFrank/RLinf/tree/handoff/v7-rl-training)。正式 teacher/student 模板保持原文；实验输出、模型、临时验收驱动和旧测试不纳入源码。
+使用发布目录的代码和独立输出目录进行小规模真实验证。日常使用两套环境：SOLE-R1 Python 3.10（v3/V7 模型）与 RLinf Python 3.11（仿真、采集与 PPO）。
 
-## 已完成的真实小规模验证
+| 环节 | 实测结果 |
+|---|---|
+| 采集 | 同一 RLinf 环境运行采集分支：task6 基线 127 动作、配对掉落 186 动作，干预前完整状态差异为 0 |
+| 几何标注 | 新采集的 313 帧按冻结 v2 标尺复算，无恢复异常；此前历史 task7 的 240 帧复算与旧环境一致 |
+| CoT 构造 | 固定 gpt-6.1-sol 模板生成 1 条真实样本，导出、loader、22 图 processor 与 completion-only mask 通过；首次连接错误保留记录，重试成功 |
+| V7 SFT | SOLE-R1 环境，2 张 A100，成功 from_zero 与失败 sequential 各 1 条，全参数 FSDP 更新 1 步，loss 0.028077，保存并导出模型 |
+| V7 推理 | 本轮新模型完成 sequential 与 from_zero 各 2 次真实预测，均通过严格解析 |
+| RL 接入 | RLinf 从 Pi0 SFT 采集 17 动作/18 观测；SOLE-R1 reward worker 查询 0、17 帧并插值回填；4 个 microbatch、1 次 PPO 更新，动作输出层 32,768 个权重值改变 |
+| v3 | 同日完成几何、5 条本地 CoT、SFT、GRPO 与双模式推理；详见 v3-reproduction 分支的验证记录 |
 
-以下均运行发布目录中的代码。几何/API先在原环境验证；SFT与RL随后又在独立新建Python环境验证，未覆盖原实验目录。
+SFT 使用现有正式样本；本轮新 API 样本单独验证编码。测试没有改动正式数据、模板或奖励公式。临时模型、测试脚本和日志只保存在本地 `checks/shared_reward_20261106`，不进入代码仓库。
 
-| 阶段 | 实际验证 |
-| --- | --- |
-| 几何标注 | 使用 RLinf 采集分支恢复一条真实轨迹的240帧仿真状态，按冻结task标尺复算；所选窗口两个端点与冻结整数标签一致，无恢复异常 |
-| CoT构造 | 固定 gpt-6.1-sol 模板真实调用1次，成功导出1条sequential训练JSONL；真实loader/processor验证22图及completion-only监督 |
-| 全参数SFT | 2张A100，已有正式成功from_zero和失败sequential各1条，从已有完整版模型继续1次更新；8,767,123,696参数可训练，loss=0.028077；视觉与语言权重实际改变 |
-| 保存与推理 | 保存checkpoint、optimizer、scheduler、step和processor；导出8个权重分片；RL reward worker实际重载本轮新模型并生成合法输出 |
-| RL接入 | 发布RLinf代码从SFT Pi0真实采集task6的17动作/18观测time-limit轨迹；sequential stride20查询0和17，线性插值回填17个奖励；4个microbatch、1次原生PPO更新，动作输出层32,768个权重值改变 |
+本机有两张 A100 80GB：SFT 验证了双卡 FSDP，RL 验证了真实采集、跨环境评分、GAE 和 PPO 方法；本轮未重新运行八卡 Ray/FSDP campaign。正式多卡使用现有平台短训入口。
 
-SFT小测使用两条已有正式训练样本；本轮新API样本另行通过真实loader/processor检查，未声称它参与了上述参数更新。RL使用的是上述小测新导出的reward模型，不是跳过SFT环节直接使用旧模型。reward保持冻结，公式及输入输出协议未变。
+## 环境与原始资产
 
-**验证边界：**SFT实测两卡FSDP；RL实测为仓库外最小驱动调用发布版真实环境、reward进程、GAE和PPO方法，未在本轮重新运行原生Ray/FSDP八卡campaign。没有评估学习收益，未重装宿主机操作系统或驱动。不能将该结果当作八卡平台或异机安装验收。
+已安装的 SOLE-R1 环境适配入口已实际运行：v3/V7 共用同一 Python，固定项目依赖与导入检查通过。官方完整环境从零下载不属于本项目适配脚本的步骤。两套环境的安装、变量和源码分支选择见[环境说明](环境_CN.md)。已在 SOLE-R1 环境实际运行 v3/V7；RLinf 环境由官方 OpenPI/LIBERO 安装入口及固定兼容依赖建立，并同时用于新 RL 训练代码与旧采集分支。
 
-本机证据保存在发布仓库之外的 `checks/real_pipeline_20261105`；历史检查另包括14,704条曝光计划重建、正式八卡训练预检和RL配置解析。源码精简前后的归档保存在仓库外 `local_archive`，不需要协作者下载历史测试或中间模型。
-
-## 仍需交接的资产边界
-
-已发布训练图像和JSONL可直接用于SFT。重新采集及几何标注还需要原始rollout、仿真状态、接触记录、BDDL/assets、任务标尺和选窗manifest；训练图像包不等于原始轨迹包。历史选窗调度仍依赖实验manifest，不能声称新机器可一键重建116条原始失败样本。
-
-采集与几何复算须明确设置 `V7_COLLECTION_REPO`，指向独立RLinf采集分支，避免隐式导入本机旧目录。RL训练使用独立训练分支。两个环境及两个RLinf源码分支的使用边界见环境文档；observed版本清单不是跨平台安装锁。
-
-## 独立环境复验（同日补充）
-
-已经从空Python环境安装reward与policy，未复制旧venv或引用compat_deps。官方policy安装的多阶段依赖存在五项冲突，已收敛到`policy-compat.txt`，包括Torch 2.7.1、MuJoCo 3.3.7、匹配的OpenPI Transformers及Ray 2.55.1。两个环境均通过uv pip check；参考版本见`environments/validated_versions.json`。
-
-新reward环境实际完成两卡全参数SFT一次更新、最终模型导出；新policy环境实际完成17步LIBERO采集，调用新reward环境加载本轮导出模型，完成两次sequential查询、17条奖励回填、一次PPO更新和checkpoint回读。修复了混训入口两处rank0判断缺少方法调用，以及SFT导出后的分布式退出同步。固定模板、奖励公式和训练超参数未变。
-
-本次仍不是八卡Ray/FSDP平台复验；操作系统图形库和驱动沿用宿主机，legacy采集环境未重建。测试驱动和大文件在Git仓库外的`checks/clean_env_20261105`。上述验证完成时尚未发布；现代码已推送GitHub，Google Doc待模型/数据发布状态核对后整理。
-
-最终安装脚本另在两个空目录完整复验通过，安装后的policy核心版本与真实运行环境一致。该参考policy环境的Torch/MuJoCo与旧环境不同，八卡正式训练前应执行现有平台短训入口。
-
-## 旧采集分支共用新policy环境（同日补充）
-
-未经依赖补装或算法改动，新policy环境直接运行发布采集分支完成task6成功基线127动作、配对掉落186动作，扰动前完整状态误差0。313帧新状态恢复与冻结v2标注通过；历史task7的240帧复算与旧环境结果完全一致。检查及原图保存在仓库外`checks/collection_new_env_20261105`。因此无需默认要求第三套legacy环境；旧环境保留作为回退。覆盖范围仅上述轨迹，历史批量调度/输出路径的可移植性仍是独立待办。
+公开训练数据可直接用于 SFT。重新采集和几何标注还需要仿真资产、原始状态、接触记录与任务标尺；历史批量选窗依赖实验 manifest，不能仅凭训练图像包重建原始轨迹。数据构造入口及资产要求见[数据构造说明](数据构造_CN.md)。

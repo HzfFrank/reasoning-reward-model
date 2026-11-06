@@ -5,7 +5,7 @@
 ## 说明
 
 - [使用说明](docs/使用说明_CN.md)：下载数据后的 SFT、推理与 RL 连接。
-- [环境说明](docs/环境_CN.md)：reward、policy 两套环境，以及旧采集分支共用 policy 的方法。
+- [环境说明](docs/环境_CN.md)：SOLE-R1、RLinf 两套环境，以及旧采集分支共用 policy 的方法。
 - [协作规则](CONTRIBUTING.md)：分支、兼容版本、实验记录。
 - [数据构造](docs/数据构造_CN.md)：模板、原始 rollout、几何分数和 API 入口。
 - [交接状态](docs/交接状态_CN.md)：已验证项与仍需完成的可移植工作。
@@ -30,3 +30,5 @@ sequential 输入 GLOBAL 16 图、INITIAL 2 图、PREVIOUS 2 图、CURRENT 2 图
 - 旧数据采集：[同仓库的 handoff/v7-data-collection 分支](https://github.com/HzfFrank/RLinf/tree/handoff/v7-data-collection)。仅需重建原始轨迹时克隆到另一目录。
 
 安装 policy 环境使用 RL 训练分支作为安装入口；采集分支可复用该环境，不必再装第三套。
+
+V3 与 V7 共用 SOLE-R1 的 `reward_server/.venv`；RLinf 的 V7 评分进程也使用该 Python。安装与复用命令见上面的环境说明。

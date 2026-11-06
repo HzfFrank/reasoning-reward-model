@@ -1,6 +1,6 @@
 # 使用说明
 
-所有 `/your/...` 路径须替换为本机位置。先复制 `configs/paths.example.sh` 到 Git 之外的私有配置文件，填写路径后 source，再执行 `source scripts/data_disk_env.sh`。目录可放在任意可写磁盘；默认使用用户目录，也可设置到共享存储。
+先按[环境说明](环境_CN.md)适配已安装的 SOLE-R1 环境，并准备 RLinf 环境。所有 `/your/...` 路径须替换为本机位置。先复制 `configs/paths.example.sh` 到 Git 之外的私有配置文件，填写路径后 source，再执行 `source scripts/data_disk_env.sh`。目录可放在任意可写磁盘；默认使用用户目录，也可设置到共享存储。
 
 ## 已发布数据训练
 
@@ -41,7 +41,7 @@ from_zero 使用相同命令替换 mode。线性 patch 优化保持原权重，�
 
 ## RLinf 接入
 
-另克隆/检出 RLinf 的 `handoff/v7-rl-training` 分支。reward、policy 使用不同 Python；不需要安装另一个 SOLE-R1 reward server 才能调用本仓库。
+另克隆/检出 RLinf 的 `handoff/v7-rl-training` 分支。RLinf Python 负责策略与仿真，`V7_REWARD_PYTHON` 指向共用的 SOLE-R1 Python；入口自动启动评分子进程。
 
 除 paths 示例外设置：
 

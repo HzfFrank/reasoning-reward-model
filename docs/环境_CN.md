@@ -1,21 +1,26 @@
 # 环境安装与使用
 
-日常使用只需要两个环境：reward（CoT构造、Qwen SFT和推理）与policy（RLinf、Pi0和LIBERO）。旧扰动采集/几何标注已用同一个policy环境完成小规模真实验证，无需默认安装第三套环境。旧、新RLinf代码仍为两个分支，运行时分别选择源码；不要同时editable安装两份RLinf。
+日常使用两套环境：SOLE-R1（v3/V7 的 CoT 构造、SFT、RLVR 和推理）与 RLinf（Pi0 策略训练、轨迹采集和 LIBERO 仿真）。旧扰动采集/几何标注已用同一个policy环境完成小规模真实验证，无需默认安装第三套环境。旧、新RLinf代码仍为两个分支，运行时分别选择源码；不要同时editable安装两份RLinf。
 
 以下入口面向Linux x86_64/NVIDIA。先安装uv，并准备兼容的NVIDIA驱动。目录可使用系统盘、用户目录或共享数据盘；本项目不强制存储位置。需要自定义缓存时，先编辑并source `configs/paths.example.sh`，再source `scripts/data_disk_env.sh`。
 
-## Reward环境
+## SOLE-R1 环境：v3、V7 和 RL 评分共用
 
-在v7仓库根目录执行：
+官方在 `reward_server` 中使用 Python 3.10 和 `uv sync` 安装依赖，`run.sh` 还会启动官方 reward server。我们复用该 Python 环境，由本项目的入口执行训练和推理。参考 [SOLE-R1 官方安装说明](https://github.com/Philip-MIT/sole-r1-model/blob/main/reward_server/README.md)。
+
+先按上述官方说明安装好 SOLE-R1 环境，再在 V7 仓库目录执行适配：
 
 ```bash
-bash scripts/install_reward.sh "$HOME/envs/v7-reward"
-export V7_REWARD_PYTHON="$HOME/envs/v7-reward/bin/python"
+bash scripts/install_reward.sh /your/src/sole-r1-model
+export V7_REWARD_PYTHON=/your/src/sole-r1-model/reward_server/.venv/bin/python
+export PYTHON="$V7_REWARD_PYTHON"  # v3 脚本使用这个变量
 ```
 
-脚本创建独立Python 3.10环境，安装Torch 2.9.0/CUDA 12.8、torchvision 0.24.0和Transformers 4.57.3等直接依赖，再检查依赖一致性。`reward-linux-py310.constraints.txt`固定参考环境的传递依赖，不是适用于任意平台的通用锁。已有目录会被拒绝，不自动覆盖旧环境。
+脚本直接使用现有 Python 3.10，从官方 PyPI 补齐 `environments/reward-core.txt` 的固定依赖并检查导入，不创建新环境，也不重新运行 `uv sync`。已满足的包复用，不匹配的项目依赖按文件版本调整；Torch 2.9.0、Transformers 4.57.3、DeepSpeed 0.15.4 是本项目实测组合。`--reuse` 保留为兼容写法，与默认行为相同。
 
-## Policy环境
+如果官方环境安装在其他位置，执行适配前设置 `V7_REWARD_PYTHON=/absolute/path/to/python`。以后 v3、V7 和 RL reward worker 都使用同一个解释器；v3 分支的 `scripts/install.sh` 提供相同适配功能，两边无需重复安装。仅安装了软件环境还不包含模型权重和数据，仍需按 README 下载资产。
+
+## RLinf 环境
 
 先检出交接记录对应的RLinf训练分支；在v7仓库根目录运行：
 
@@ -42,13 +47,13 @@ export LIBERO_CONFIG_PATH=/your/envs/rlinf-policy/libero_config
 
 ## 两个环境如何连接
 
-启动前设置`V7_REWARD_PYTHON`、`V7_POLICY_PYTHON`、两个仓库位置以及模型/输出路径，示例在`configs/paths.example.sh`。RL入口使用policy Python启动训练，reward worker使用reward Python加载模型；不需要在终端反复activate两个环境。
+启动前设置`V7_REWARD_PYTHON`、`V7_POLICY_PYTHON`、两个仓库位置以及模型/输出路径，示例在`configs/paths.example.sh`。RL 入口使用 RLinf Python 启动策略训练，reward worker 使用 SOLE-R1 Python 加载 V7 模型；不需要在终端反复activate两个环境。
 
 Pi0权重及norm_stats、Qwen权重及processor、paligemma tokenizer是单独资产，不能用pip安装代替。官方安装器下载LIBERO assets。多套LIBERO环境共存时使用不同`LIBERO_CONFIG_PATH`，避免缓存配置指向另一套环境。
 
 ## 旧采集环境与验证边界
 
-旧采集分支可复用上述policy Python。安装仍以RLinf训练分支为入口；运行采集/几何标注时，在独立进程中显式选择采集源码：
+旧采集分支可复用上述 RLinf Python。安装仍以RLinf训练分支为入口；运行采集/几何标注时，在独立进程中显式选择采集源码：
 
 ```bash
 export V7_COLLECTION_REPO=/your/src/RLinf-collection

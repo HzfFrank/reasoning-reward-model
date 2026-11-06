@@ -9,7 +9,10 @@
     "python": "3.10.12",
     "torch": "2.9.0+cu128",
     "transformers": "4.57.3",
-    "constraints": "reward-linux-py310.constraints.txt"
+    "environment": "SOLE-R1 reward_server/.venv",
+    "requirements": "reward-core.txt",
+    "sole_r1_commit": "2a1286b205577a38a2ef5d9d13efa76878485f87",
+    "deepspeed": "0.15.4"
   },
   "policy": {
     "python": "3.11.14",

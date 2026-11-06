@@ -2,7 +2,8 @@
 export V7_DATA_ROOT="$HOME/.local/share/v7-reward"
 export V7_RUNS_ROOT="$V7_DATA_ROOT/runs/v7"
 export V7_REWARD_REPO=/your/workspace/v7-reward
-export V7_REWARD_PYTHON=/your/environments/reward/bin/python
+export V7_REWARD_PYTHON=/your/src/sole-r1-model/reward_server/.venv/bin/python
+export PYTHON="$V7_REWARD_PYTHON"  # v3 uses the same SOLE-R1 environment
 export V7_POLICY_PYTHON=/your/environments/policy/bin/python
 export V7_RLINF_TRAINING=/your/workspace/RLinf-training
 export V7_COLLECTION_REPO=/your/workspace/RLinf-collection
