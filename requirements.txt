@@ -1,0 +1,13 @@
+# SOLE-R1 training stack; also compatible with the V7 torch/transformers versions.
+torch==2.9.0
+torchvision==0.24.0
+transformers==4.57.3
+deepspeed==0.15.4
+accelerate==1.12.0
+datasets==4.4.2
+pyarrow==22.0.0
+numpy==1.26.4
+Pillow==12.0.0
+safetensors==0.7.0
+tensorboard==2.20.0
+ninja

@@ -1,9 +1,0 @@
-{
-  "task_id": 7,
-  "status": "calibrated",
-  "beta": 0.75,
-  "y_start": 0.4658252237256696,
-  "y_goal_anchor": 0.0301981910398616,
-  "original_config_sha256": "9d8df98ce583acd5dc30335ea9856c00cef1395fca560194e3702017a7b14cfa",
-  "note": "Scalar reference only; original calibration evidence and simulator trajectories are external assets."
-}

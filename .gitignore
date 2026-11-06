@@ -16,3 +16,9 @@ verified_datasets/
 *.npy
 *.jsonl
 !provenance/*.jsonl
+models/
+data/
+*.arrow
+*.pkl
+stage2a_artifacts/
+stage3_artifacts/

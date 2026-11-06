@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-06",
+  "generated_rows": 5,
+  "from_zero_rows": 2,
+  "geometry_max_abs_difference": 0.0,
+  "sft_pass": true,
+  "sft_seconds": 89.74950432777405,
+  "rlvr_clean_environment_pass": true,
+  "rlvr_seconds": 207.95618534088135,
+  "rlvr_effective_learning_signal_steps": 1,
+  "sequential_queries": 3,
+  "from_zero_queries": 2,
+  "prediction_parse_pass": 5,
+  "gpus": 2,
+  "rlvr_short_test_optimizer_offload": "cpu",
+  "formal_config_gpus": 4,
+  "template_equivalence": {
+    "build_prompt_json": true,
+    "build_problem_prompt": true,
+    "build_problem_prompt_v2": true,
+    "build_qwen_instruction_v2": true,
+    "generate_template_reasoning_v2": true,
+    "_make_grid": true
+  },
+  "weights": {
+    "sft": {
+      "model.visual.patch_embed.proj.weight": {
+        "changed_values": 1052855,
+        "max_abs_change": 1.52587890625e-05
+      },
+      "model.language_model.layers.0.self_attn.q_proj.weight": {
+        "changed_values": 2200795,
+        "max_abs_change": 1.52587890625e-05
+      }
+    },
+    "rlvr": {
+      "model.visual.patch_embed.proj.weight": {
+        "changed_values": 93324,
+        "max_abs_change": 9.5367431640625e-07
+      },
+      "model.language_model.layers.0.self_attn.q_proj.weight": {
+        "changed_values": 76645,
+        "max_abs_change": 9.5367431640625e-07
+      }
+    }
+  }
+}

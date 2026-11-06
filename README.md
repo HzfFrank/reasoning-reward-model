@@ -1,32 +1,109 @@
-# V7 progress reward model
+# SOLE-R1 v3 复现
 
-这是 v7 正式流程的源码交接仓库。包含成功/失败数据构造、固定 CoT 模板、全参数 SFT、完整轨迹推理，以及与独立 RLinf 仓库的接入说明。模型、训练图像和 JSONL 放在 Hugging Face。
+本分支提供 LIBERO Spatial 上的 v3 数据构造、SFT、GRPO RLVR 和双视角推理。V7 位于本仓库的 `main` 分支，两者分别克隆即可使用。
 
-## 说明
+## 1. 获取代码与环境
 
-- [使用说明](docs/使用说明_CN.md)：下载数据后的 SFT、推理与 RL 连接。
-- [环境说明](docs/环境_CN.md)：reward、policy 两套环境，以及旧采集分支共用 policy 的方法。
-- [协作规则](CONTRIBUTING.md)：分支、兼容版本、实验记录。
-- [数据构造](docs/数据构造_CN.md)：模板、原始 rollout、几何分数和 API 入口。
-- [交接状态](docs/交接状态_CN.md)：已验证项与仍需完成的可移植工作。
+```bash
+git clone -b v3-reproduction https://github.com/HzfFrank/reasoning-reward-model.git sole-v3
+cd sole-v3
+bash scripts/install.sh .venv
+export PYTHON="$PWD/.venv/bin/python"
+```
 
-## 固定协议
+需要 NVIDIA GPU、CUDA Toolkit（DeepSpeed 编译算子使用 nvcc）和 `uv`（可通过 `python -m pip install uv` 安装）。安装脚本使用 Python 3.10、PyTorch 2.9.0、Transformers 4.57.3、DeepSpeed 0.15.4、torchvision 0.24.0。完整依赖版本记录在 `requirements.lock.txt`。原有兼容的 SOLE-R1 环境可以直接设置 `PYTHON=/path/to/environment/bin/python`，无需重装。
 
-sequential 输入 GLOBAL 16 图、INITIAL 2 图、PREVIOUS 2 图、CURRENT 2 图和上一进度；from_zero 输入 GLOBAL 16 图、INITIAL 2 图、CURRENT 2 图。GLOBAL 是完整 episode 均匀抽取的 8 个时刻，每个时刻 main/wrist 双视角。推理依赖完整轨迹，不是因果在线单帧评分。
+V7 使用相同版本的 PyTorch/Transformers，但其训练不依赖 DeepSpeed。已有 V7 环境可以先对照 `requirements.txt`；不要直接升级或覆盖正在使用的环境。v3 单独环境复用 uv 的下载缓存，模型和数据也只需保存一份。
 
-输出固定为 `<think><update>…</update><state>…</state><progress>…</progress></think><answer>整数%</answer>`。student 模板在 `stage7_sft/prompts.py`；成功 teacher 在 `stage7_tools/v7_grounded_contract_templates.py`；失败 teacher 在 `stage7_tools/v7_short_failure_teacher.py`，继承关系已保留。
+仿真采集继续使用已发布的 [RLinf 数据采集分支](https://github.com/HzfFrank/RLinf/tree/handoff/v7-data-collection)，以及 V7 的 policy 环境。对已有轨迹进行几何计算、CoT 生成、SFT、RLVR 和推理只需上述 v3 环境。
 
-成功数据 train 13,364、validation 336、test 343；失败数据仅 train 116。完整版训练覆盖全部成功 train 一次，按冻结计划加入 1,336 次失败曝光和 4 条尾部 padding，总计 14,704 次曝光、八卡有效 batch 16、919 次 optimizer 更新。不是 14,704 个独立样本。
+## 2. 下载现成的数据与模型
 
-## 发布资产
+| 内容 | Hugging Face |
+|---|---|
+| 14,046 条 v3 数据及拼图 | [nova819/sole-r1-v3-data](https://huggingface.co/datasets/nova819/sole-r1-v3-data) |
+| v3 SFT 模型 | [nova819/sole-r1-v3-sft](https://huggingface.co/nova819/sole-r1-v3-sft) |
+| v3 RLVR 模型 | [nova819/sole-r1-v3-rlvr](https://huggingface.co/nova819/sole-r1-v3-rlvr) |
 
-- 模型：`nova819/sole-r1-v7-success`、`nova819/sole-r1-v7-full`
-- 数据：`nova819/sole-r1-v7-success-data`、`nova819/sole-r1-v7-failure-data`
+下载数据时须包含 `images/`。训练入口读取 HF `save_to_disk` 格式，可将公开 JSONL 转换一次：
 
-## 配套代码仓库
+```bash
+hf download nova819/sole-r1-v3-data --repo-type dataset --local-dir data/v3
+"$PYTHON" data/v3/resolve_paths.py --output data/v3/train.absolute.jsonl
+"$PYTHON" -m toolkits.libero_sole.merge_cot_dataset \
+  --inputs data/v3/train.absolute.jsonl --output data/v3/training.jsonl \
+  --hf-dataset-dir data/v3/arrow
+export V3_DATASET="$PWD/data/v3/arrow"
+```
 
-- 本仓库：[HzfFrank/reasoning-reward-model](https://github.com/HzfFrank/reasoning-reward-model)。克隆目录可自定，统一用 `V7_REWARD_REPO` 指向它。
-- RL训练：[HzfFrank/RLinf 的 handoff/v7-rl-training 分支](https://github.com/HzfFrank/RLinf/tree/handoff/v7-rl-training)。
-- 旧数据采集：[同仓库的 handoff/v7-data-collection 分支](https://github.com/HzfFrank/RLinf/tree/handoff/v7-data-collection)。仅需重建原始轨迹时克隆到另一目录。
+SFT 的起点为 `Qwen/Qwen3-VL-8B-Instruct`，原实验固定 revision `0c351dd01ed87e9c1b53cbc748cba10e6187ff3b`：
 
-安装 policy 环境使用 RL 训练分支作为安装入口；采集分支可复用该环境，不必再装第三套。
+```bash
+hf download Qwen/Qwen3-VL-8B-Instruct \
+  --revision 0c351dd01ed87e9c1b53cbc748cba10e6187ff3b \
+  --local-dir models/Qwen3-VL-8B-Instruct
+export V3_BASE_MODEL="$PWD/models/Qwen3-VL-8B-Instruct"
+export V3_RUNS_ROOT="$PWD/runs"
+```
+
+已有模型目录直接设置变量即可，不会再次下载。可用 `HF_HOME`、`UV_CACHE_DIR`、`TMPDIR`、`TORCH_EXTENSIONS_DIR` 指定缓存和临时目录。
+
+## 3. 从 rollout 构造数据
+
+原实验使用 404 条成功轨迹。每条包含 `images/main/`、`images/wrist/`、`actions.npy`、`semantic_states.pkl`、`contact_records.pkl`、`task.json` 和元数据。原始轨迹来自 RLinf 采集分支；仅重新训练模型时可直接使用第 2 节的数据。
+
+先准备成功轨迹的工作副本，再运行：
+
+```bash
+CUDA_VISIBLE_DEVICES=0 bash scripts/build_data.sh /absolute/path/success_trajectories /absolute/path/generated_v3
+```
+
+该命令依次计算 contact progress（beta=0.75）、混合抽帧、构造双视角拼图、本地 Qwen 生成 CoT、导出 JSONL 和 Arrow。它会在工作轨迹目录写入分数与拼图；不要将工作副本软链接到需要保持不变的原始轨迹。原版规则保留 30% from-zero 抽样概率，固定随机种子；生成规模随轨迹长度和事件数量变化。
+
+`generate_cot_dataset_v3.py` 调用 v2/v1 中的公共构造函数，因此这些模块都是运行依赖。模板、方向分析及标签规则沿用 v3，未换成 V7 的全局视频协议。
+
+## 4. SFT
+
+```bash
+NPROC=4 bash scripts/train_sft.sh
+```
+
+默认一轮全数据、全参数 BF16、ZeRO-3、AdamW、学习率 `1e-5`，每卡 microbatch=1、梯度累积16；只监督 assistant completion。输出包括 DeepSpeed checkpoint 和 Hugging Face 模型。改变卡数会改变有效 batch，复现原实验使用4卡。
+
+通过尾部参数可做短运行，例如 `--train-samples 4 --max-optimizer-steps 1 --gradient-accumulation-steps 1`。正式配置在脚本中明确列出。
+
+## 5. RLVR
+
+```bash
+export V3_SFT_MODEL=/absolute/path/to/v3_sft_model
+NPROC=4 bash scripts/train_rlvr.sh
+```
+
+沿用 v3 的 GRPO：500步、group size=8、temperature=0.7、top-p=0.9、KL系数0.01、clip=0.2、tau=5、学习率 `5e-7`。奖励由输出格式和预测百分比误差组成；每50步评估、每100步及结束时导出 HF 模型。该配置复现本地 v3 实验，论文的5000步与 `1e-6` 学习率并非本次运行配置。
+
+RLVR 从 SFT 权重初始化，并保留冻结参考模型；完整状态和训练指标写入 `V3_RUNS_ROOT`。它是 reward model 的训练，不是机器人策略的 PPO 训练。
+
+## 6. 完整轨迹推理
+
+```bash
+CUDA_VISIBLE_DEVICES=0 "$PYTHON" inference.py \
+  --model /absolute/path/to/v3_rlvr_model \
+  --episode /absolute/path/to/episode \
+  --mode sequential --stride 4 --output runs/inference/episode.jsonl
+```
+
+sequential 使用初始、前一、当前时刻的双视角拼图，并回灌上一次模型预测；from-zero 使用初始和当前双视角，传入 `--mode from_zero`。两种模式共用数据构造的 prompt 函数，推理不读取 progress 标签。输出逐查询保存原文 CoT、解析结果、帧号和实际输入文本。
+
+推理 CLI 使用 Hugging Face 后端，方便在同一训练环境运行；输入拼图与提示词保留 v3 协议。首帧以0%初始化，查询最后一帧，格式错误会保留原文并报错。
+
+## 7. 文件导航
+
+- `toolkits/libero_sole/`：几何分数、抽帧、拼图、CoT 与 Arrow 导出。
+- `stage2a_tools/`：正式 SFT 入口与共用 collator。
+- `stage3_tools/`：GRPO 入口、训练公共函数、奖励计算与指标记录。
+- `scripts/`：安装、数据构造、SFT、RLVR 命令。
+- `inference.py`：与训练提示词一致的轨迹推理。
+
+原始实验结果、测试驱动和临时模型留在本地，Git 分支只保存运行代码、配置和说明。
+
+发布前真实运行记录见 [验证记录](docs/验证记录.md)。

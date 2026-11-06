@@ -1,0 +1,18 @@
+{
+  "training_sources": [
+    "stage2a_tools/libero_sft_e2e.py",
+    "stage2a_tools/sft_pipeline.py",
+    "stage3_tools/libero_rlvr_train.py",
+    "stage3_tools/libero_rlvr_train_grpo_v3.py",
+    "stage3_tools/rlvr_core.py",
+    "stage3_tools/tensorboard_event_writer.py",
+    "DEEPSPEED_OR_FSDP_CONFIG/zero3_no_offload.json"
+  ],
+  "data_source": "HzfFrank/RLinf handoff/v7-data-collection; original toolkits/libero_sole",
+  "base_model_revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+  "changes": [
+    "configurable paths",
+    "removed obsolete smoke entrypoints",
+    "shared helper dependency closure retained"
+  ]
+}
