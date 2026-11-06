@@ -18,6 +18,8 @@ export PYTHON="$V7_REWARD_PYTHON"  # v3 脚本使用这个变量
 
 脚本直接使用现有 Python 3.10，从官方 PyPI 补齐 `environments/reward-core.txt` 的固定依赖并检查导入，不创建新环境，也不重新运行 `uv sync`。已满足的包复用，不匹配的项目依赖按文件版本调整；Torch 2.9.0、Transformers 4.57.3、DeepSpeed 0.15.4 是本项目实测组合。`--reuse` 保留为兼容写法，与默认行为相同。
 
+适配会安装或调整依赖，不修改任何模型权重。本机本次仅新增 TensorBoard 及其 4 个依赖，Torch、Transformers、vLLM、FlashAttention 未替换；不同版本的已有环境可能发生依赖升级或降级。已验证 v3/V7 的真实 GPU 运行，官方 reward_server 的完整 vLLM 服务回归尚未执行。
+
 如果官方环境安装在其他位置，执行适配前设置 `V7_REWARD_PYTHON=/absolute/path/to/python`。以后 v3、V7 和 RL reward worker 都使用同一个解释器；v3 分支的 `scripts/install.sh` 提供相同适配功能，两边无需重复安装。仅安装了软件环境还不包含模型权重和数据，仍需按 README 下载资产。
 
 ## RLinf 环境
